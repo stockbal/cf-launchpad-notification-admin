@@ -1,0 +1,71 @@
+{
+  "name": "notification-admin",
+  "version": "1.0.0",
+  "description": "CAP/Fiori application for managing SAP Launchpad service notification types",
+  "repository": "http://github.com/stockbal/notification-admin",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "@sap-cloud-sdk/connectivity": "^2.11.0",
+    "@sap-cloud-sdk/http-client": "^2.11.0",
+    "@sap-cloud-sdk/util": "^2.11.0",
+    "@sap/cds": "^6.3.1",
+    "@sap/xssec": "^3",
+    "express": "^4",
+    "hdb": "^0.19.0",
+    "passport": "^0"
+  },
+  "devDependencies": {
+    "@sap/ux-specification": "^1.102.13",
+    "@typescript-eslint/eslint-plugin": "^5.45.0",
+    "@typescript-eslint/parser": "^5.45.0",
+    "cds2types": "^3.0.0",
+    "eslint": "^8.29.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "npm-run-all": "^4.1.5",
+    "prettier": "^2.8.0",
+    "sqlite3": "^5.0.4",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.9.3",
+    "rimraf": "^3.0.2"
+  },
+  "prettier": {
+    "trailingComma": "none",
+    "printWidth": 100
+  },
+  "scripts": {
+    "start": "cds run",
+    "watch": "cds-ts watch",
+    "gen:cds-types": "cds2types -c ./srv -o ./srv/types/cds/ -f -s",
+    "undeploy": "cf undeploy notification-admin --delete-services --delete-service-keys --delete-service-brokers",
+    "build": "rimraf resources mta_archives && mbt build --mtar archive",
+    "deploy": "cf deploy mta_archives/archive.mtar --retries 1"
+  },
+  "engines": {
+    "node": "^16.15"
+  },
+  "cds": {
+    "requires": {
+      "[production]": {
+        "auth": {
+          "kind": "xsuaa"
+        },
+        "db": {
+          "kind": "hana-cloud"
+        }
+      },
+      "[development]": {
+        "auth": {
+          "strategy": "dummy"
+        },
+        "db": {
+          "kind": "sqlite"
+        }
+      }
+    }
+  },
+  "sapux": [
+    "app/notification-types-admin"
+  ]
+}

@@ -1,0 +1,42 @@
+# Retrieve Token
+# @name login
+POST {{$dotenv authUrl}}/oauth/token
+Content-Type: application/x-www-form-urlencoded
+Authorization: Basic {{$dotenv notifClientId}}:{{$dotenv notifClientSecret}}
+
+grant_type=client_credentials
+
+### Save authorization token to variable
+@token = {{login.response.body.access_token}}
+
+###
+
+# Fetch csrf token and cookies
+# @name getCSRF
+HEAD {{$dotenv notifUrl}}/v2/NotificationType.svc HTTP/1.1
+Authorization: Bearer {{token}}
+X-CSRF-Token: fetch
+
+### Save CSRF token to variable
+@csrf={{getCSRF.response.headers.X-CSRF-Token}}
+
+###
+
+# Read notification type metadata
+GET {{$dotenv notifUrl}}/v2/NotificationType.svc/$metadata HTTP/1.1
+Authorization: Bearer {{token}}
+
+###
+
+# Read Notification Type
+# @name readNotificationTypes
+GET {{$dotenv notifUrl}}/v2/NotificationType.svc/NotificationTypes
+Authorization: Bearer {{token}}
+Accept: application/json
+
+###
+
+# Delete notification type
+DELETE {{$dotenv notifUrl}}/v2/NotificationType.svc/NotificationTypes(guid'{{$dotenv notifTypeIdToDelete}}')
+Authorization: Bearer {{token}}
+X-CSRF-Token: {{csrf}}

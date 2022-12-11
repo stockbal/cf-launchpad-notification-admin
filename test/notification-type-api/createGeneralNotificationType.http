@@ -1,0 +1,131 @@
+@NotificationTypeKey=MyNotifType
+@NotificationTypeVersion=1.0
+
+# Retrieve Token
+# @name login
+POST {{$dotenv authUrl}}/oauth/token
+Content-Type: application/x-www-form-urlencoded
+Authorization: Basic {{$dotenv notifClientId}}:{{$dotenv notifClientSecret}}
+
+grant_type=client_credentials
+
+### Save authorization token to variable
+@token = {{login.response.body.access_token}}
+
+###
+
+# Fetch csrf token and cookies
+# @name getCSRF
+HEAD {{$dotenv notifUrl}}/v2/NotificationType.svc HTTP/1.1
+Authorization: Bearer {{token}}
+X-CSRF-Token: fetch
+
+### Save CSRF token to variable
+@csrf={{getCSRF.response.headers.X-CSRF-Token}}
+
+###
+
+# Read Notification service metadata
+GET {{$dotenv notifUrl}}/v2/Notification.svc/$metadata
+Authorization: Bearer {{token}}
+
+###
+
+# Create notification type
+POST {{$dotenv notifUrl}}/v2/NotificationType.svc/NotificationTypes HTTP/1.1
+Authorization: Bearer {{token}}
+Content-Type: application/json
+X-CSRF-Token: {{csrf}}
+Accept: application/json
+
+{
+    "NotificationTypeKey": "{{NotificationTypeKey}}",
+    "NotificationTypeVersion": "{{NotificationTypeVersion}}",
+    "Templates": [
+        {
+            "Language": "en",
+            "TemplatePublic": "{{$dotenv TemplatePublic}}",
+            "TemplateSensitive": "{{$dotenv TemplateSensitive}}",
+            "TemplateGrouped": "{{$dotenv TemplateGrouped}}",
+            "TemplateLanguage": "Mustache",
+            "Subtitle": "{{$dotenv Subtitle}}"
+        },
+        {
+            "Language": "de",
+            "TemplatePublic": "{{$dotenv TemplatePublic_de}}",
+            "TemplateSensitive": "{{$dotenv TemplateSensitive_de}}",
+            "TemplateGrouped": "{{$dotenv TemplateGrouped_de}}",
+            "TemplateLanguage": "Mustache",
+            "Subtitle": "{{$dotenv Subtitle_de}}"
+        }
+    ],
+    "Actions": [
+        {
+            "ActionId": "AcceptLRActionKey",
+            "Language": "en",
+            "ActionText": "Accept",
+            "GroupActionText": "Accept All",
+            "Nature": "POSITIVE"
+        },
+        {
+            "ActionId": "RejectLRActionKey",
+            "Language": "en",
+            "ActionText": "Reject",
+            "GroupActionText": "Reject All",
+            "Nature": "NEGATIVE"
+        },
+                {
+            "ActionId": "AcceptLRActionKey",
+            "Language": "de",
+            "ActionText": "Akzeptieren",
+            "GroupActionText": "Alle akzeptieren",
+            "Nature": "POSITIVE"
+        },
+        {
+            "ActionId": "RejectLRActionKey",
+            "Language": "de",
+            "ActionText": "Ablehnen",
+            "GroupActionText": "Alle ablehnen",
+            "Nature": "NEGATIVE"
+        }
+    ]
+}
+
+###
+
+# Publish notification
+### 
+POST {{$dotenv notifUrl}}/v2/Notification.svc/Notifications
+Authorization: Bearer {{token}}
+Content-Type: application/json
+Accept: application/json
+X-CSRF-Token: {{csrf}}
+
+{
+    "NotificationTypeKey": "{{NotificationTypeKey}}",
+    "NotificationTypeVersion": "{{NotificationTypeVersion}}",
+    "NavigationTargetAction": "DisplayMyInbox",
+    "NavigationTargetObject": "WorkflowTask",
+    "Priority": "Medium",
+    "Properties": [
+        {
+            "Key": "notif_user",
+            "Language": "en",
+            "Value": "Michael Muster",
+            "Type": "String",
+            "IsSensitive": false
+        },
+        {
+            "Key": "count_total",
+            "Language": "en",
+            "Value": "4",
+            "Type": "Integer",
+            "IsSensitive": true
+        }
+    ],
+    "Recipients": [
+        {
+            "RecipientId": "{{$dotenv recipientEmail}}"
+        }
+    ]
+}

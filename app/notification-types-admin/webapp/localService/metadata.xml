@@ -1,0 +1,340 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+    <edmx:Reference Uri="https://sap.github.io/odata-vocabularies/vocabularies/Common.xml">
+        <edmx:Include Alias="Common" Namespace="com.sap.vocabularies.Common.v1"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Core.V1.xml">
+        <edmx:Include Alias="Core" Namespace="Org.OData.Core.V1"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://sap.github.io/odata-vocabularies/vocabularies/UI.xml">
+        <edmx:Include Alias="UI" Namespace="com.sap.vocabularies.UI.v1"/>
+    </edmx:Reference>
+    <edmx:DataServices>
+        <Schema Namespace="NotificationTypeService" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+            <EntityContainer Name="EntityContainer">
+                <EntitySet Name="NotificationTypes" EntityType="NotificationTypeService.NotificationTypes">
+                    <NavigationPropertyBinding Path="Templates" Target="Templates"/>
+                    <NavigationPropertyBinding Path="Actions" Target="Actions"/>
+                    <NavigationPropertyBinding Path="SiblingEntity" Target="NotificationTypes"/>
+                </EntitySet>
+                <EntitySet Name="Templates" EntityType="NotificationTypeService.Templates">
+                    <NavigationPropertyBinding Path="texts" Target="Templates_texts"/>
+                    <NavigationPropertyBinding Path="localized" Target="Templates_texts"/>
+                    <NavigationPropertyBinding Path="SiblingEntity" Target="Templates"/>
+                </EntitySet>
+                <EntitySet Name="Actions" EntityType="NotificationTypeService.Actions">
+                    <NavigationPropertyBinding Path="texts" Target="Actions_texts"/>
+                    <NavigationPropertyBinding Path="localized" Target="Actions_texts"/>
+                    <NavigationPropertyBinding Path="SiblingEntity" Target="Actions"/>
+                </EntitySet>
+                <EntitySet Name="Templates_texts" EntityType="NotificationTypeService.Templates_texts"/>
+                <EntitySet Name="Actions_texts" EntityType="NotificationTypeService.Actions_texts"/>
+            </EntityContainer>
+            <EntityType Name="NotificationTypes">
+                <Key>
+                    <PropertyRef Name="NotificationTypeId"/>
+                    <PropertyRef Name="IsActiveEntity"/>
+                </Key>
+                <Property Name="NotificationTypeId" Type="Edm.Guid" Nullable="false"/>
+                <Property Name="NotificationTypeKey" Type="Edm.String" MaxLength="32"/>
+                <Property Name="NotificationTypeVersion" Type="Edm.String" MaxLength="20"/>
+                <Property Name="IsGroupable" Type="Edm.Boolean"/>
+                <NavigationProperty Name="Templates" Type="Collection(NotificationTypeService.Templates)">
+                    <OnDelete Action="Cascade"/>
+                </NavigationProperty>
+                <NavigationProperty Name="Actions" Type="Collection(NotificationTypeService.Actions)">
+                    <OnDelete Action="Cascade"/>
+                </NavigationProperty>
+                <Property Name="IsActiveEntity" Type="Edm.Boolean" Nullable="false" DefaultValue="true"/>
+                <Property Name="HasActiveEntity" Type="Edm.Boolean" Nullable="false" DefaultValue="false"/>
+                <Property Name="HasDraftEntity" Type="Edm.Boolean" Nullable="false" DefaultValue="false"/>
+                <NavigationProperty Name="DraftAdministrativeData" Type="NotificationTypeService.DraftAdministrativeData" ContainsTarget="true"/>
+                <NavigationProperty Name="SiblingEntity" Type="NotificationTypeService.NotificationTypes"/>
+            </EntityType>
+            <EntityType Name="Templates">
+                <Key>
+                    <PropertyRef Name="NotificationTypeId"/>
+                    <PropertyRef Name="IsActiveEntity"/>
+                </Key>
+                <Property Name="NotificationTypeId" Type="Edm.Guid" Nullable="false"/>
+                <Property Name="TemplatePublic" Type="Edm.String" MaxLength="250"/>
+                <Property Name="TemplateSensitive" Type="Edm.String" MaxLength="250"/>
+                <Property Name="TemplateGrouped" Type="Edm.String" MaxLength="250"/>
+                <Property Name="Description" Type="Edm.String" MaxLength="250"/>
+                <Property Name="Subtitle" Type="Edm.String"/>
+                <Property Name="TemplateLanguage" Type="Edm.String" MaxLength="20"/>
+                <NavigationProperty Name="texts" Type="Collection(NotificationTypeService.Templates_texts)">
+                    <OnDelete Action="Cascade"/>
+                </NavigationProperty>
+                <NavigationProperty Name="localized" Type="NotificationTypeService.Templates_texts">
+                    <ReferentialConstraint Property="NotificationTypeId" ReferencedProperty="NotificationTypeId"/>
+                </NavigationProperty>
+                <Property Name="IsActiveEntity" Type="Edm.Boolean" Nullable="false" DefaultValue="true"/>
+                <Property Name="HasActiveEntity" Type="Edm.Boolean" Nullable="false" DefaultValue="false"/>
+                <Property Name="HasDraftEntity" Type="Edm.Boolean" Nullable="false" DefaultValue="false"/>
+                <NavigationProperty Name="DraftAdministrativeData" Type="NotificationTypeService.DraftAdministrativeData" ContainsTarget="true"/>
+                <NavigationProperty Name="SiblingEntity" Type="NotificationTypeService.Templates"/>
+            </EntityType>
+            <EntityType Name="Actions">
+                <Key>
+                    <PropertyRef Name="NotificationTypeId"/>
+                    <PropertyRef Name="ActionId"/>
+                    <PropertyRef Name="IsActiveEntity"/>
+                </Key>
+                <Property Name="NotificationTypeId" Type="Edm.Guid" Nullable="false"/>
+                <Property Name="ActionId" Type="Edm.String" MaxLength="32" Nullable="false"/>
+                <Property Name="ActionText" Type="Edm.String" MaxLength="40"/>
+                <Property Name="GroupActionText" Type="Edm.String" MaxLength="40"/>
+                <Property Name="Nature" Type="Edm.String"/>
+                <NavigationProperty Name="texts" Type="Collection(NotificationTypeService.Actions_texts)">
+                    <OnDelete Action="Cascade"/>
+                </NavigationProperty>
+                <NavigationProperty Name="localized" Type="NotificationTypeService.Actions_texts">
+                    <ReferentialConstraint Property="NotificationTypeId" ReferencedProperty="NotificationTypeId"/>
+                    <ReferentialConstraint Property="ActionId" ReferencedProperty="ActionId"/>
+                </NavigationProperty>
+                <Property Name="IsActiveEntity" Type="Edm.Boolean" Nullable="false" DefaultValue="true"/>
+                <Property Name="HasActiveEntity" Type="Edm.Boolean" Nullable="false" DefaultValue="false"/>
+                <Property Name="HasDraftEntity" Type="Edm.Boolean" Nullable="false" DefaultValue="false"/>
+                <NavigationProperty Name="DraftAdministrativeData" Type="NotificationTypeService.DraftAdministrativeData" ContainsTarget="true"/>
+                <NavigationProperty Name="SiblingEntity" Type="NotificationTypeService.Actions"/>
+            </EntityType>
+            <EntityType Name="DraftAdministrativeData">
+                <Key>
+                    <PropertyRef Name="DraftUUID"/>
+                </Key>
+                <Property Name="DraftUUID" Type="Edm.Guid" Nullable="false"/>
+                <Property Name="CreationDateTime" Type="Edm.DateTimeOffset" Precision="7"/>
+                <Property Name="CreatedByUser" Type="Edm.String" MaxLength="256"/>
+                <Property Name="DraftIsCreatedByMe" Type="Edm.Boolean"/>
+                <Property Name="LastChangeDateTime" Type="Edm.DateTimeOffset" Precision="7"/>
+                <Property Name="LastChangedByUser" Type="Edm.String" MaxLength="256"/>
+                <Property Name="InProcessByUser" Type="Edm.String" MaxLength="256"/>
+                <Property Name="DraftIsProcessedByMe" Type="Edm.Boolean"/>
+            </EntityType>
+            <EntityType Name="Templates_texts">
+                <Key>
+                    <PropertyRef Name="locale"/>
+                    <PropertyRef Name="NotificationTypeId"/>
+                </Key>
+                <Property Name="locale" Type="Edm.String" MaxLength="14" Nullable="false"/>
+                <Property Name="NotificationTypeId" Type="Edm.Guid" Nullable="false"/>
+                <Property Name="TemplatePublic" Type="Edm.String" MaxLength="250" Nullable="false"/>
+                <Property Name="TemplateSensitive" Type="Edm.String" MaxLength="250"/>
+                <Property Name="TemplateGrouped" Type="Edm.String" MaxLength="250"/>
+                <Property Name="Description" Type="Edm.String" MaxLength="250"/>
+                <Property Name="Subtitle" Type="Edm.String"/>
+            </EntityType>
+            <EntityType Name="Actions_texts">
+                <Key>
+                    <PropertyRef Name="locale"/>
+                    <PropertyRef Name="NotificationTypeId"/>
+                    <PropertyRef Name="ActionId"/>
+                </Key>
+                <Property Name="locale" Type="Edm.String" MaxLength="14" Nullable="false"/>
+                <Property Name="NotificationTypeId" Type="Edm.Guid" Nullable="false"/>
+                <Property Name="ActionId" Type="Edm.String" MaxLength="32" Nullable="false"/>
+                <Property Name="ActionText" Type="Edm.String" MaxLength="40"/>
+                <Property Name="GroupActionText" Type="Edm.String" MaxLength="40"/>
+            </EntityType>
+            <Action Name="draftPrepare" IsBound="true" EntitySetPath="in">
+                <Parameter Name="in" Type="NotificationTypeService.NotificationTypes"/>
+                <Parameter Name="SideEffectsQualifier" Type="Edm.String"/>
+                <ReturnType Type="NotificationTypeService.NotificationTypes"/>
+            </Action>
+            <Action Name="draftPrepare" IsBound="true" EntitySetPath="in">
+                <Parameter Name="in" Type="NotificationTypeService.Templates"/>
+                <Parameter Name="SideEffectsQualifier" Type="Edm.String"/>
+                <ReturnType Type="NotificationTypeService.Templates"/>
+            </Action>
+            <Action Name="draftPrepare" IsBound="true" EntitySetPath="in">
+                <Parameter Name="in" Type="NotificationTypeService.Actions"/>
+                <Parameter Name="SideEffectsQualifier" Type="Edm.String"/>
+                <ReturnType Type="NotificationTypeService.Actions"/>
+            </Action>
+            <Action Name="draftActivate" IsBound="true" EntitySetPath="in">
+                <Parameter Name="in" Type="NotificationTypeService.NotificationTypes"/>
+                <ReturnType Type="NotificationTypeService.NotificationTypes"/>
+            </Action>
+            <Action Name="draftEdit" IsBound="true" EntitySetPath="in">
+                <Parameter Name="in" Type="NotificationTypeService.NotificationTypes"/>
+                <Parameter Name="PreserveChanges" Type="Edm.Boolean"/>
+                <ReturnType Type="NotificationTypeService.NotificationTypes"/>
+            </Action>
+            <Annotations Target="NotificationTypeService.NotificationTypes">
+                <Annotation Term="Common.SemanticKey">
+                    <Collection>
+                        <PropertyPath>NotificationTypeKey</PropertyPath>
+                        <PropertyPath>NotificationTypeVersion</PropertyPath>
+                    </Collection>
+                </Annotation>
+            </Annotations>
+            <Annotations Target="NotificationTypeService.EntityContainer/NotificationTypes">
+                <Annotation Term="Common.DraftRoot">
+                    <Record Type="Common.DraftRootType">
+                        <PropertyValue Property="ActivationAction" String="NotificationTypeService.draftActivate"/>
+                        <PropertyValue Property="EditAction" String="NotificationTypeService.draftEdit"/>
+                        <PropertyValue Property="PreparationAction" String="NotificationTypeService.draftPrepare"/>
+                    </Record>
+                </Annotation>
+            </Annotations>
+            <Annotations Target="NotificationTypeService.NotificationTypes/NotificationTypeId">
+                <Annotation Term="Core.Computed" Bool="true"/>
+                <Annotation Term="Common.Label" String="Id"/>
+            </Annotations>
+            <Annotations Target="NotificationTypeService.NotificationTypes/NotificationTypeKey">
+                <Annotation Term="Common.Label" String="Key"/>
+            </Annotations>
+            <Annotations Target="NotificationTypeService.NotificationTypes/NotificationTypeVersion">
+                <Annotation Term="Common.Label" String="Version"/>
+            </Annotations>
+            <Annotations Target="NotificationTypeService.NotificationTypes/IsGroupable">
+                <Annotation Term="Common.Label" String="Groupable?"/>
+            </Annotations>
+            <Annotations Target="NotificationTypeService.NotificationTypes/IsActiveEntity">
+                <Annotation Term="UI.Hidden" Bool="true"/>
+            </Annotations>
+            <Annotations Target="NotificationTypeService.NotificationTypes/HasActiveEntity">
+                <Annotation Term="UI.Hidden" Bool="true"/>
+            </Annotations>
+            <Annotations Target="NotificationTypeService.NotificationTypes/HasDraftEntity">
+                <Annotation Term="UI.Hidden" Bool="true"/>
+            </Annotations>
+            <Annotations Target="NotificationTypeService.NotificationTypes/DraftAdministrativeData">
+                <Annotation Term="UI.Hidden" Bool="true"/>
+            </Annotations>
+            <Annotations Target="NotificationTypeService.EntityContainer/Templates">
+                <Annotation Term="Common.DraftNode">
+                    <Record Type="Common.DraftNodeType">
+                        <PropertyValue Property="PreparationAction" String="NotificationTypeService.draftPrepare"/>
+                    </Record>
+                </Annotation>
+            </Annotations>
+            <Annotations Target="NotificationTypeService.Templates/NotificationTypeId">
+                <Annotation Term="Core.Computed" Bool="true"/>
+                <Annotation Term="Common.Label" String="Id"/>
+            </Annotations>
+            <Annotations Target="NotificationTypeService.Templates/TemplatePublic">
+                <Annotation Term="Common.Label" String="Template Public"/>
+            </Annotations>
+            <Annotations Target="NotificationTypeService.Templates/TemplateSensitive">
+                <Annotation Term="Common.Label" String="Template Sensitive"/>
+            </Annotations>
+            <Annotations Target="NotificationTypeService.Templates/TemplateGrouped">
+                <Annotation Term="Common.Label" String="Template Grouped"/>
+            </Annotations>
+            <Annotations Target="NotificationTypeService.Templates/Description">
+                <Annotation Term="Common.Label" String="Description"/>
+            </Annotations>
+            <Annotations Target="NotificationTypeService.Templates/Subtitle">
+                <Annotation Term="Common.Label" String="Subtitle"/>
+            </Annotations>
+            <Annotations Target="NotificationTypeService.Templates/IsActiveEntity">
+                <Annotation Term="UI.Hidden" Bool="true"/>
+            </Annotations>
+            <Annotations Target="NotificationTypeService.Templates/HasActiveEntity">
+                <Annotation Term="UI.Hidden" Bool="true"/>
+            </Annotations>
+            <Annotations Target="NotificationTypeService.Templates/HasDraftEntity">
+                <Annotation Term="UI.Hidden" Bool="true"/>
+            </Annotations>
+            <Annotations Target="NotificationTypeService.Templates/DraftAdministrativeData">
+                <Annotation Term="UI.Hidden" Bool="true"/>
+            </Annotations>
+            <Annotations Target="NotificationTypeService.EntityContainer/Actions">
+                <Annotation Term="Common.DraftNode">
+                    <Record Type="Common.DraftNodeType">
+                        <PropertyValue Property="PreparationAction" String="NotificationTypeService.draftPrepare"/>
+                    </Record>
+                </Annotation>
+            </Annotations>
+            <Annotations Target="NotificationTypeService.Actions/NotificationTypeId">
+                <Annotation Term="Core.Computed" Bool="true"/>
+                <Annotation Term="Common.Label" String="Id"/>
+            </Annotations>
+            <Annotations Target="NotificationTypeService.Actions/ActionId">
+                <Annotation Term="Common.Label" String="Action Id"/>
+            </Annotations>
+            <Annotations Target="NotificationTypeService.Actions/ActionText">
+                <Annotation Term="Common.Label" String="Action Text"/>
+            </Annotations>
+            <Annotations Target="NotificationTypeService.Actions/GroupActionText">
+                <Annotation Term="Common.Label" String="Action GroupText"/>
+            </Annotations>
+            <Annotations Target="NotificationTypeService.Actions/IsActiveEntity">
+                <Annotation Term="UI.Hidden" Bool="true"/>
+            </Annotations>
+            <Annotations Target="NotificationTypeService.Actions/HasActiveEntity">
+                <Annotation Term="UI.Hidden" Bool="true"/>
+            </Annotations>
+            <Annotations Target="NotificationTypeService.Actions/HasDraftEntity">
+                <Annotation Term="UI.Hidden" Bool="true"/>
+            </Annotations>
+            <Annotations Target="NotificationTypeService.Actions/DraftAdministrativeData">
+                <Annotation Term="UI.Hidden" Bool="true"/>
+            </Annotations>
+            <Annotations Target="NotificationTypeService.DraftAdministrativeData">
+                <Annotation Term="Common.Label" String="{i18n>Draft_DraftAdministrativeData}"/>
+                </Annotations>
+                <Annotations Target="NotificationTypeService.DraftAdministrativeData/DraftUUID">
+                    <Annotation Term="UI.Hidden" Bool="true"/>
+                    <Annotation Term="Common.Label" String="{i18n>Draft_DraftUUID}"/>
+                    </Annotations>
+                    <Annotations Target="NotificationTypeService.DraftAdministrativeData/CreationDateTime">
+                        <Annotation Term="Common.Label" String="{i18n>Draft_CreationDateTime}"/>
+                        </Annotations>
+                        <Annotations Target="NotificationTypeService.DraftAdministrativeData/CreatedByUser">
+                            <Annotation Term="Common.Label" String="{i18n>Draft_CreatedByUser}"/>
+                            </Annotations>
+                            <Annotations Target="NotificationTypeService.DraftAdministrativeData/DraftIsCreatedByMe">
+                                <Annotation Term="UI.Hidden" Bool="true"/>
+                                <Annotation Term="Common.Label" String="{i18n>Draft_DraftIsCreatedByMe}"/>
+                                </Annotations>
+                                <Annotations Target="NotificationTypeService.DraftAdministrativeData/LastChangeDateTime">
+                                    <Annotation Term="Common.Label" String="{i18n>Draft_LastChangeDateTime}"/>
+                                    </Annotations>
+                                    <Annotations Target="NotificationTypeService.DraftAdministrativeData/LastChangedByUser">
+                                        <Annotation Term="Common.Label" String="{i18n>Draft_LastChangedByUser}"/>
+                                        </Annotations>
+                                        <Annotations Target="NotificationTypeService.DraftAdministrativeData/InProcessByUser">
+                                            <Annotation Term="Common.Label" String="{i18n>Draft_InProcessByUser}"/>
+                                            </Annotations>
+                                            <Annotations Target="NotificationTypeService.DraftAdministrativeData/DraftIsProcessedByMe">
+                                                <Annotation Term="UI.Hidden" Bool="true"/>
+                                                <Annotation Term="Common.Label" String="{i18n>Draft_DraftIsProcessedByMe}"/>
+                                                </Annotations>
+                                                <Annotations Target="NotificationTypeService.Templates_texts/NotificationTypeId">
+                                                    <Annotation Term="Core.Computed" Bool="true"/>
+                                                    <Annotation Term="Common.Label" String="Id"/>
+                                                </Annotations>
+                                                <Annotations Target="NotificationTypeService.Templates_texts/TemplatePublic">
+                                                    <Annotation Term="Common.Label" String="Template Public"/>
+                                                </Annotations>
+                                                <Annotations Target="NotificationTypeService.Templates_texts/TemplateSensitive">
+                                                    <Annotation Term="Common.Label" String="Template Sensitive"/>
+                                                </Annotations>
+                                                <Annotations Target="NotificationTypeService.Templates_texts/TemplateGrouped">
+                                                    <Annotation Term="Common.Label" String="Template Grouped"/>
+                                                </Annotations>
+                                                <Annotations Target="NotificationTypeService.Templates_texts/Description">
+                                                    <Annotation Term="Common.Label" String="Description"/>
+                                                </Annotations>
+                                                <Annotations Target="NotificationTypeService.Templates_texts/Subtitle">
+                                                    <Annotation Term="Common.Label" String="Subtitle"/>
+                                                </Annotations>
+                                                <Annotations Target="NotificationTypeService.Actions_texts/NotificationTypeId">
+                                                    <Annotation Term="Core.Computed" Bool="true"/>
+                                                    <Annotation Term="Common.Label" String="Id"/>
+                                                </Annotations>
+                                                <Annotations Target="NotificationTypeService.Actions_texts/ActionId">
+                                                    <Annotation Term="Common.Label" String="Action Id"/>
+                                                </Annotations>
+                                                <Annotations Target="NotificationTypeService.Actions_texts/ActionText">
+                                                    <Annotation Term="Common.Label" String="Action Text"/>
+                                                </Annotations>
+                                                <Annotations Target="NotificationTypeService.Actions_texts/GroupActionText">
+                                                    <Annotation Term="Common.Label" String="Action GroupText"/>
+                                                </Annotations>
+                                            </Schema>
+                                        </edmx:DataServices>
+                                    </edmx:Edmx>
