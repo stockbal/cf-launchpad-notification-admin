@@ -26,6 +26,20 @@ export class ExtNotificationTypeService {
     }
   }
 
+  static async deleteNotificationType(id: string): Promise<void> {
+    const notifServiceDest = await getCachedDestination(Destinations.SAP_NOTIFICATION);
+
+    try {
+      await executeHttpRequest(notifServiceDest, {
+        url: `${NOTIFICATION_TYPES_ENDPOINT}/NotificationTypes(guid'${id}')`,
+        method: "delete"
+      });
+    } catch (error) {
+      logger.error(`Notification type with Id '${id}' could not be deleted`);
+      throw createError(error);
+    }
+  }
+
   static async createNotificationType(
     notificationType: ExternalNotificationType
   ): Promise<ExternalNotificationType> {
