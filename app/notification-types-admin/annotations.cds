@@ -110,10 +110,9 @@ UI : {
     ],
 }) {
     Language          @(
-        ValueList.entity       : 'Languages',
+        Common.ValueListWithFixedValues,
         Common.Text            : Language.name,
-        Common.TextArrangement : #TextOnly,
-        Common.ValueListWithFixedValues, //show as drop down, not a dialog
+        Common.TextArrangement : #TextOnly
     );
 
     TemplatePublic    @UI.MultiLineText;
@@ -154,15 +153,15 @@ UI : {
     ]
 }) {
     Language @(
+        Common.ValueListWithFixedValues,
         Common.Text            : Language.name,
         Common.TextArrangement : #TextOnly,
-        Common.ValueListWithFixedValues, //show as drop down, not a dialog
     );
 
     Nature   @(
         Common.ValueListWithFixedValues,
-        Common.TextArrangement : #TextOnly,
-        Common.Text            : Nature.name
+        Common.Text            : Nature.name,
+        Common.TextArrangement : #TextOnly
     )
 };
 
