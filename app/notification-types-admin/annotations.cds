@@ -29,7 +29,13 @@ UI : {
         {Value : NotificationTypeVersion},
         {Value : NotificationTypeKey},
         {Value : IsGroupable}
-    ], },
+    ]},
+    FieldGroup #Admin   : {Data : [
+        {Value : createdBy},
+        {Value : createdAt},
+        {Value : modifiedBy},
+        {Value : modifiedAt}
+    ]},
     Facets              : [
         {
             $Type  : 'UI.ReferenceFacet',
@@ -46,7 +52,12 @@ UI : {
             $Type  : 'UI.ReferenceFacet',
             Label  : '{i18n>NotificationType_Type_Facets_Actions_Label}',
             Target : 'Actions/@UI.LineItem'
-        }
+        },
+        {
+            $Type  : 'UI.ReferenceFacet',
+            Label  : '{i18n>Facets_Admin_Label}',
+            Target : '@UI.FieldGroup#Admin'
+        },
     ]
 });
 
