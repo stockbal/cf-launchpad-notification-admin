@@ -1,6 +1,6 @@
 _schema-version: "3.1"
 ID: notification-admin
-description: A simple CAP project.
+description: Administration of SAP Launchpad Service Notification Types
 version: 1.0.0
 parameters:
   deploy_mode: html5-repo
@@ -21,6 +21,7 @@ modules:
     requires:
       - name: notification-admin-db
       - name: notification-admin-auth
+      - name: notification-admin-destination-service
     provides:
       - name: srv-api
         properties:
@@ -103,11 +104,6 @@ modules:
               TokenServiceInstanceName: notification-admin-auth
               TokenServiceKeyName: notification-admin-auth-key
               URL: ~{srv-api/srv-url}
-            - Name: ui5
-              Authentication: NoAuthentication
-              ProxyType: Internet
-              Type: HTTP
-              URL: https://ui5.sap.com
     build-parameters:
       no-source: true
 
@@ -132,7 +128,6 @@ resources:
     type: org.cloudfoundry.managed-service
     parameters:
       service: html5-apps-repo
-      service-name: notification-admin-html5-srv
       service-plan: app-host
 
   - name: notification-admin-destination-service
@@ -140,6 +135,15 @@ resources:
     parameters:
       config:
         HTML5Runtime_enabled: true
+        init_data:
+          instance:
+            destinations:
+              - Name: ui5
+                Authentication: NoAuthentication
+                ProxyType: Internet
+                Type: HTTP
+                URL: https://ui5.sap.com
+            existing_destinations_policy: update
         version: 1.0.0
       service: destination
       service-name: notification-admin-destination-service
