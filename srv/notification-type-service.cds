@@ -14,7 +14,4 @@ service NotificationTypeService {
         NotificationTypeKey || '-' || NotificationTypeVersion as headerTitle : String
 
     };
-
-    @readonly
-    entity Natures           as projection on db.Natures;
 }
