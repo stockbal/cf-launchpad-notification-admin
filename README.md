@@ -27,7 +27,4 @@ TemplateSensitive_de=
 TemplateGrouped_de=
 TemplatePublic_de=
 Subtitle_de=
-
-# UUID to delete notification type 
-notifTypeIdToDelete=
 ```

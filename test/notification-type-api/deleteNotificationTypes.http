@@ -37,6 +37,6 @@ Accept: application/json
 ###
 
 # Delete notification type
-DELETE {{$dotenv notifUrl}}/v2/NotificationType.svc/NotificationTypes(guid'{{$dotenv notifTypeIdToDelete}}')
+DELETE {{$dotenv notifUrl}}/v2/NotificationType.svc/NotificationTypes(guid'{{readNotificationTypes.response.body.d.results[0].NotificationTypeId}}')
 Authorization: Bearer {{token}}
 X-CSRF-Token: {{csrf}}
