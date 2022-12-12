@@ -33,8 +33,6 @@ export class NotificationTypeService extends ApplicationService {
         }))
       } as ExternalNotificationType;
 
-      console.log(externalNotificationType);
-
       if (notificationType.syncedNotificationTypeID) {
         await ExtNotificationTypeService.deleteNotificationType(
           notificationType.syncedNotificationTypeID
@@ -45,6 +43,25 @@ export class NotificationTypeService extends ApplicationService {
       );
       if (syncedNotificationType?.NotificationTypeId) {
         notificationType.syncedNotificationTypeID = syncedNotificationType.NotificationTypeId;
+      }
+    });
+
+    this.before("DELETE", async req => {
+      console.log(req.data);
+
+      const notificationType = (await SELECT.one
+        .from(req.target)
+        .columns("syncedNotificationTypeID")
+        .where({ ID: (req.data as any).ID })) as Pick<
+        srv.NotificationTypes,
+        "syncedNotificationTypeID"
+      >;
+
+      if (notificationType?.syncedNotificationTypeID) {
+        // delete notification type from external service
+        await ExtNotificationTypeService.deleteNotificationType(
+          notificationType.syncedNotificationTypeID
+        );
       }
     });
     await super.init();
