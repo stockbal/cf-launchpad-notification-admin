@@ -1,5 +1,6 @@
 import * as NotificationServiceTypes from "./cds/NotificationService";
 import * as NotificationTypeServiceTypes from "./cds/NotificationTypeService";
+import * as DbTypes from "./cds/db";
 
 /**
  * Notification Type in external OData v2 API on SAP Launchpad service
@@ -57,6 +58,7 @@ interface ExternalNotification {
 export {
   NotificationServiceTypes,
   NotificationTypeServiceTypes,
+  DbTypes,
   ExternalNotificationType,
   ExternalNotification
 };
