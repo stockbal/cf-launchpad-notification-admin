@@ -40,6 +40,7 @@
     "watch": "cds-ts watch",
     "gen:cds-types": "cds2types -c ./srv -o ./srv/types/cds/ -f -s",
     "undeploy": "cf undeploy notification-admin --delete-services --delete-service-keys --delete-service-brokers",
+    "get:env": "cf de notification-admin-srv",
     "build": "rimraf resources mta_archives && mbt build --mtar archive",
     "deploy": "cf deploy mta_archives/archive.mtar --retries 1"
   },
