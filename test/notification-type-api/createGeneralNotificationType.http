@@ -31,7 +31,7 @@ Authorization: Bearer {{token}}
 
 ###
 
-# Create notification type
+# Create notification type A
 POST {{$dotenv notifUrl}}/v2/NotificationType.svc/NotificationTypes HTTP/1.1
 Authorization: Bearer {{token}}
 Content-Type: application/json
@@ -93,8 +93,7 @@ Accept: application/json
 
 ###
 
-# Publish notification
-### 
+# Publish notification B
 POST {{$dotenv notifUrl}}/v2/Notification.svc/Notifications
 Authorization: Bearer {{token}}
 Content-Type: application/json
@@ -121,6 +120,58 @@ X-CSRF-Token: {{csrf}}
             "Value": "4",
             "Type": "Integer",
             "IsSensitive": true
+        }
+    ],
+    "Recipients": [
+        {
+            "RecipientId": "{{$dotenv recipientEmail}}"
+        }
+    ]
+}
+
+###
+
+# Create notification type B
+POST {{$dotenv notifUrl}}/v2/NotificationType.svc/NotificationTypes HTTP/1.1
+Authorization: Bearer {{token}}
+Content-Type: application/json
+X-CSRF-Token: {{csrf}}
+Accept: application/json
+
+{
+    "NotificationTypeKey": "CustomNotifType",
+    "NotificationTypeVersion": "1.0",
+    "Templates": [
+        {
+            "Language": "de",
+            "TemplatePublic": "Benachrichtigung",
+            "TemplateSensitive": "Benachrichtigung für {notif_user}",
+            "TemplateGrouped": "Benachrichtungen",
+            "Subtitle": "Untertitel"
+        }
+    ]
+}
+
+###
+
+# Publish notification B
+POST {{$dotenv notifUrl}}/v2/Notification.svc/Notifications
+Authorization: Bearer {{token}}
+Content-Type: application/json
+Accept: application/json
+X-CSRF-Token: {{csrf}}
+
+{
+    "NotificationTypeKey": "CustomNotifType",
+    "NotificationTypeVersion": "1.0",
+    "Priority": "Medium",
+    "Properties": [
+        {
+            "Key": "notif_user",
+            "Language": "en",
+            "Value": "Michael Muster",
+            "Type": "String",
+            "IsSensitive": false
         }
     ],
     "Recipients": [
