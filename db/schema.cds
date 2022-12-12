@@ -17,6 +17,8 @@ entity NotificationTypes : managed, cuid {
     NotificationTypeVersion  : String(20);
     @title : '{i18n>NotificationType_Type_IsGroupable_title}'
     IsGroupable              : Boolean;
+    @title : '{i18n>NotificationType_Type_TemplateLanguage_title}'
+    TemplateLanguage  : Association to TemplateLanguages;
     syncedNotificationTypeID : UUID;
     Templates                : Composition of many Templates
                                    on Templates.notificationType = $self;
@@ -41,8 +43,6 @@ entity Templates : managed, cuid {
     @title : '{i18n>NotificationType_Template_Subtitle_title}'
     @mandatory
     Subtitle          : LargeString not null;
-    // Hide from Fiori UI and always set internally
-    TemplateLanguage  : String(20);
     notificationType  : Association to NotificationTypes;
 };
 
@@ -63,5 +63,9 @@ entity Actions : managed, cuid {
 };
 
 entity Natures : CodeList {
+    key code : String(20);
+}
+
+entity TemplateLanguages : CodeList {
     key code : String(20);
 }

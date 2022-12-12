@@ -28,7 +28,8 @@ UI : {
     FieldGroup #General : {Data : [
         {Value : NotificationTypeVersion},
         {Value : NotificationTypeKey},
-        {Value : IsGroupable}
+        {Value : IsGroupable},
+        {Value : TemplateLanguage_code}
     ]},
     FieldGroup #Admin   : {Data : [
         {Value : createdBy},
@@ -59,7 +60,13 @@ UI : {
             Target : '@UI.FieldGroup#Admin'
         },
     ]
-});
+}) {
+    TemplateLanguage         @(
+        Common.ValueListWithFixedValues,
+        Common.Text            : TemplateLanguage.name,
+        Common.TextArrangement : #TextOnly
+    );
+};
 
 annotate service.Templates with @( //
 UI : {
@@ -162,6 +169,13 @@ annotate service.Natures {
         Common.TextArrangement : #TextOnly
     )
 };
+
+annotate service.TemplateLanguages {
+    code @(
+        Common.Text            : name,
+        Common.TextArrangement : #TextOnly
+    )
+}
 
 
 annotate service.Actions {

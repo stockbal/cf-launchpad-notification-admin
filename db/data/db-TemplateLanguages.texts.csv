@@ -1,0 +1,5 @@
+locale;code;name;descr
+de; ;Standard;{variable}
+de;Mustache;Mustache;{{variable}}
+en; ;Default;{variable}
+en;Mustache;Mustache;{{variable}}
