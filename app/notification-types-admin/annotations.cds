@@ -61,6 +61,9 @@ UI : {
         },
     ]
 }) {
+    syncedNotificationTypeID @UI.HiddenFilter;
+    headerTitle              @UI.HiddenFilter;
+
     TemplateLanguage         @(
         Common.ValueListWithFixedValues,
         Common.Text            : TemplateLanguage.name,
