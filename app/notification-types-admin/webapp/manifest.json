@@ -122,11 +122,6 @@
                     "pattern": "NotificationTypes({key}):?query:",
                     "name": "NotificationTypesObjectPage",
                     "target": "NotificationTypesObjectPage"
-                },
-                {
-                    "pattern": "NotificationTypes({key})/Templates({key2}):?query:",
-                    "name": "TemplatesObjectPage",
-                    "target": "TemplatesObjectPage"
                 }
             ],
             "targets": {
@@ -157,33 +152,7 @@
                         "settings": {
                             "editableHeaderContent": false,
                             "entitySet": "NotificationTypes",
-                            "navigation": {
-                                "Templates": {
-                                    "detail": {
-                                        "route": "TemplatesObjectPage"
-                                    }
-                                }
-                            },
-                            "controlConfiguration": {
-                                "texts/@com.sap.vocabularies.UI.v1.LineItem": {
-                                    "tableSettings": {
-                                        "creationMode": {
-                                            "name": "Inline"
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },
-                "TemplatesObjectPage": {
-                    "type": "Component",
-                    "id": "TemplatesObjectPage",
-                    "name": "sap.fe.templates.ObjectPage",
-                    "options": {
-                        "settings": {
-                            "editableHeaderContent": false,
-                            "entitySet": "Templates",
+                            "navigation": {},
                             "controlConfiguration": {
                                 "texts/@com.sap.vocabularies.UI.v1.LineItem": {
                                     "tableSettings": {
