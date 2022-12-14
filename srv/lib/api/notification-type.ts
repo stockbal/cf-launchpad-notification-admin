@@ -1,6 +1,6 @@
 import { executeHttpRequest } from "@sap-cloud-sdk/http-client";
 
-import { NotificationServiceTypes as srv, ExternalNotificationType } from "../../types";
+import { ExternalNotificationType } from "../../types";
 import { createError } from "../error";
 import { Destinations } from "../constants";
 import { getCachedDestination } from "../destination";

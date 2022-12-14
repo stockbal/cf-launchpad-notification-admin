@@ -53,10 +53,7 @@ export class NotificationTypeService extends ApplicationService {
       const notificationType = (await SELECT.one
         .from(req.target)
         .columns("syncedNotificationTypeID")
-        .where({ ID: (req.data as any).ID })) as Pick<
-        srv.NotificationTypes,
-        "syncedNotificationTypeID"
-      >;
+        .where({ ID: req.data.ID })) as Pick<srv.NotificationTypes, "syncedNotificationTypeID">;
 
       if (notificationType?.syncedNotificationTypeID) {
         // delete notification type from external service

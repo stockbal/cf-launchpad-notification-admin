@@ -1,6 +1,6 @@
-import { executeHttpRequest, HttpResponse } from "@sap-cloud-sdk/http-client";
+import { executeHttpRequest } from "@sap-cloud-sdk/http-client";
 
-import { NotificationServiceTypes as srv, ExternalNotificationType } from "../../types";
+import { NotificationServiceTypes as srv } from "../../types";
 import { createError } from "../error";
 import { Destinations } from "../constants";
 import { getCachedDestination } from "../destination";
@@ -37,7 +37,7 @@ export class ExtNotificationService {
     logger.info(
       `Created notification '${notification.NotificationTypeKey}-${
         notification.NotificationTypeVersion
-      }' for users ${JSON.stringify(notification.Recipients.map((r) => r.RecipientId))}`
+      }' for users ${JSON.stringify(notification.Recipients.map(r => r.RecipientId))}`
     );
   }
 
@@ -46,7 +46,7 @@ export class ExtNotificationService {
       `Notification '${notification.NotificationTypeKey}-${
         notification.NotificationTypeVersion
       }' for users ${JSON.stringify(
-        notification.Recipients.map((r) => r.RecipientId)
+        notification.Recipients.map(r => r.RecipientId)
       )} could not be created`
     );
   }
