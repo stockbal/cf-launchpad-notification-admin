@@ -9,7 +9,7 @@ export class NotificationTypeService extends ApplicationService {
       const notificationType = req.data as srv.NotificationTypes;
       if (!notificationType?.Templates.length) {
         // at least 1 notification type has to exist
-        req.reject(422, "NT_NO_TEMPLATES_PROVIDED", "NotificationType");
+        req.reject(422, "NT_NO_TEMPLATES_PROVIDED");
       }
 
       // map type to external API
