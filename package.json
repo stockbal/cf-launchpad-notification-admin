@@ -17,6 +17,7 @@
   },
   "devDependencies": {
     "@sap/ux-specification": "^1.102.13",
+    "@types/axios": "^0.14.0",
     "@typescript-eslint/eslint-plugin": "^5.45.0",
     "@typescript-eslint/parser": "^5.45.0",
     "cds2types": "^3.0.0",
@@ -25,10 +26,10 @@
     "eslint-plugin-prettier": "^4.2.1",
     "npm-run-all": "^4.1.5",
     "prettier": "^2.8.0",
+    "rimraf": "^3.0.2",
     "sqlite3": "^5.0.4",
     "ts-node": "^10.9.1",
-    "typescript": "^4.9.3",
-    "rimraf": "^3.0.2"
+    "typescript": "^4.9.3"
   },
   "prettier": {
     "trailingComma": "none",
