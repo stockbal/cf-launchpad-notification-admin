@@ -204,15 +204,7 @@
                 }
               },
               "navigation": {},
-              "controlConfiguration": {
-                "texts/@com.sap.vocabularies.UI.v1.LineItem": {
-                  "tableSettings": {
-                    "creationMode": {
-                      "name": "Inline"
-                    }
-                  }
-                }
-              }
+              "controlConfiguration": {}
             }
           }
         }
