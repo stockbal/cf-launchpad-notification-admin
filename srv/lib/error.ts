@@ -2,6 +2,16 @@ import { AxiosError } from "axios";
 
 type ServiceError = string | { error: string | { message: string | { value: string } } };
 
+export class CustomError {
+  public code: number;
+  public message: string;
+
+  constructor(message: string, code: number) {
+    this.code = code;
+    this.message = message;
+  }
+}
+
 export function isAxiosError(error: unknown): error is AxiosError {
   return (error as AxiosError)?.isAxiosError;
 }
