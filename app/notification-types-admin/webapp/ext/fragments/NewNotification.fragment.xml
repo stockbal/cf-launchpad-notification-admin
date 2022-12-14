@@ -1,0 +1,205 @@
+<core:FragmentDefinition xmlns:form="sap.ui.layout.form"
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core">
+
+    <Dialog id="dlgNotificationTest"
+        title="{i18n>NotificationTester_Dialog_title}"
+        contentWidth="60%">
+        <Panel headerText="{i18n>NotificationTester_Panel_headerText}"
+            binding="{/notification}">
+            <form:SimpleForm layout="ResponsiveGridLayout"
+                labelSpanXL="4"
+                labelSpanL="3"
+                labelSpanM="4"
+                labelSpanS="12"
+                adjustLabelSpan="false"
+                emptySpanXL="0"
+                emptySpanL="4"
+                emptySpanM="0"
+                emptySpanS="0"
+                columnsXL="2"
+                columnsL="1"
+                columnsM="1">
+                <core:Title text="{i18n>NotificationTester_Form_Sections_Main_title}" />
+                <Label text="{i18n>NotificationTester_ActionProperty_NotificationTypeKey_title}" />
+                <Input value="{NotificationTypeKey}"
+                    required="true"
+                    maxLength="32"/>
+                <Label text="{i18n>NotificationTester_ActionProperty_NotificationTypeVersion_title}" />
+                <Input value="{NotificationTypeVersion}"
+                    required="true"
+                    maxLength="20"/>
+
+                <Label text="{i18n>NotificationTester_ActionProperty_Priority_title}" />
+                <Select selectedKey="{Priority}"
+                    required="true">
+                    <items>
+                        <core:Item key="High"
+                            text="High"/>
+                        <core:Item key="Medium"
+                            text="Medium"/>
+                        <core:Item key="Low"
+                            text="Low"/>
+                        <core:Item key="Neutral"
+                            text="Neutral"/>
+                    </items>
+                </Select>
+
+                <Label text="{i18n>NotificationTester_ActionProperty_NavigationTargetObject_title}" />
+                <Input value="{NavigationTargetObject}"/>
+
+                <Label text="{i18n>NotificationTester_ActionProperty_NavigationTargetAction_title}" />
+                <Input value="{NavigationTargetAction}"/>
+
+                <Label text="{i18n>NotificationTester_ActionProperty_OriginId_title}" />
+                <Input value="{OriginId}"/>
+
+                <core:Title text="{i18n>NotificationTester_Form_Sections_Actor_title}"/>
+                <Label text="{i18n>NotificationTester_ActionProperty_ActorId_title}" />
+                <Input value="{ActorId}"/>
+
+                <Label text="{i18n>NotificationTester_ActionProperty_ActorType_title}" />
+                <Input value="{ActorType}"/>
+
+                <Label text="{i18n>NotificationTester_ActionProperty_ActorDisplayText_title}" />
+                <Input value="{ActorDisplayText}"/>
+
+                <Label text="{i18n>NotificationTester_ActionProperty_ActorImageURL_title}" />
+                <Input value="{ActorImageURL}"
+                    type="Url"/>
+            </form:SimpleForm>
+
+            <Table id="tblProperties"
+                items="{Properties}"
+                fixedLayout="Strict"
+                mode="MultiSelect">
+                <headerToolbar>
+                    <OverflowToolbar>
+                        <content>
+                            <Title text="{i18n>NotificationTester_Tables_Properties_title}" />
+                            <ToolbarSpacer />
+                            <Button icon="sap-icon://add"
+                                type="Transparent"
+                                press=".onAddTableLine" />
+                            <Button icon="sap-icon://delete"
+                                type="Transparent"
+                                enabled="{Properties/hasSelections}"
+                                press=".onDeleteTableLine"/>
+                        </content>
+                    </OverflowToolbar>
+                </headerToolbar>
+                <columns>
+                    <Column width="15em">
+                        <Text text="{i18n>NotificationTester_ActionProperty_Key_title}" />
+                    </Column>
+                    <Column width="10em">
+                        <Text text="{i18n>NotificationTester_ActionProperty_Language_title}" />
+                    </Column>
+                    <Column width="15em">
+                        <Text text="{i18n>NotificationTester_ActionProperty_Type_title}" />
+                    </Column>
+                    <Column width="20em">
+                        <Text text="{i18n>NotificationTester_ActionProperty_Value_title}" />
+                    </Column>
+                    <Column width="8em">
+                        <Text text="{i18n>NotificationTester_ActionProperty_IsSensitive_title}" />
+                    </Column>
+                </columns>
+                <items>
+                    <ColumnListItem selected="{$selected}">
+                        <cells>
+                            <Input value="{Key}"/>
+                            <Select selectedKey="{Language}"
+                                items="{/Languages}">
+                                <items>
+                                    <core:Item key="{code}"
+                                        text="{name}"/>
+                                </items>
+                            </Select>
+                            <Input value="{Type}" />
+                            <Input value="{Value}" />
+                            <Switch state="{IsSensitive}" />
+                        </cells>
+                    </ColumnListItem>
+                </items>
+            </Table>
+            <Table id="tblTargetParams"
+                mode="MultiSelect"
+                fixedLayout="Strict"
+                items="{TargetParameters}">
+                <headerToolbar>
+                    <OverflowToolbar>
+                        <content>
+                            <Title text="{i18n>NotificationTester_Tables_TargetParameters_title}" />
+                            <ToolbarSpacer />
+                            <Button icon="sap-icon://add"
+                                type="Transparent"
+                                press=".onAddTableLine"/>
+                            <Button icon="sap-icon://delete"
+                                type="Transparent"
+                                enabled="{TargetParameters/hasSelections}"
+                                press=".onDeleteTableLine"/>
+                        </content>
+                    </OverflowToolbar>
+                </headerToolbar>
+                <columns>
+                    <Column width="15em">
+                        <Text text="{i18n>NotificationTester_ActionProperty_Key_title}" />
+                    </Column>
+                    <Column width="15em">
+                        <Text text="{i18n>NotificationTester_ActionProperty_Value_title}" />
+                    </Column>
+                </columns>
+                <items>
+                    <ColumnListItem selected="{$selected}">
+                        <cells>
+                            <Input value="{Key}"/>
+                            <Input value="{Value}" />
+                        </cells>
+                    </ColumnListItem>
+                </items>
+            </Table>
+            <Table id="tblRecipients"
+                mode="MultiSelect"
+                fixedLayout="Strict"
+                items="{Recipients}">
+                <headerToolbar>
+                    <OverflowToolbar>
+                        <content>
+                            <Title text="{i18n>NotificationTester_Tables_Recipients_title}" />
+                            <ToolbarSpacer />
+                            <Button icon="sap-icon://add"
+                                type="Transparent"
+                                press=".onAddTableLine"/>
+                            <Button icon="sap-icon://delete"
+                                type="Transparent"
+                                enabled="{Recipients/hasSelections}"
+                                press=".onDeleteTableLine"/>
+                        </content>
+                    </OverflowToolbar>
+                </headerToolbar>
+                <columns>
+                    <Column width="30em">
+                        <Text text="{i18n>NotificationTester_ActionProperty_Recipient_title}" />
+                    </Column>
+                </columns>
+                <items>
+                    <ColumnListItem selected="{$selected}">
+                        <cells>
+                            <Input value="{Recipient}" />
+                        </cells>
+                    </ColumnListItem>
+                </items>
+            </Table>
+        </Panel>
+        <buttons>
+            <Button text="{i18n>NotificationTester_Dialog_Actions_Submit_text}"
+                type="Emphasized"
+                press=".onSubmit"/>
+            <Button text="{i18n>NotificationTester_Dialog_Actions_Cancel_text}"
+                type="Default"
+                press=".onCancel"/>
+        </buttons>
+    </Dialog>
+
+</core:FragmentDefinition>

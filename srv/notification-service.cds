@@ -1,29 +1,27 @@
 @requires : 'admin'
-@path: '/notifications'
+@path     : '/notifications'
 service NotificationService {
     entity Notifications {
-        key Id                        : UUID;
-            OriginId                  : String(200);
-            NotificationTypeId        : UUID;
-            NotificationTypeKey       : String(32);
-            NotificationTypeVersion   : String(20);
-            NavigationTargetObject    : String;
-            NavigationTargetAction    : String;
-            Priority                  : String(20);
-            ProviderId                : String(32);
-            ActorId                   : String(20);
-            ActorType                 : String(20);
-            ActorDisplayText          : String(120);
-            ActorImageURL             : String;
-            NotificationTypeTimestamp : Timestamp;
-            Requester                 : String;
-            Recipients                : Composition of many Recipients
-                                            on Recipients.NotificationId = $self.Id;
-            Properties                : Composition of many NotifcationProperties
-                                            on Properties.NotificationId = $self.Id;
+        key Id                      : UUID;
+            OriginId                : String(200);
+            NotificationTypeId      : UUID;
+            NotificationTypeKey     : String(32);
+            NotificationTypeVersion : String(20);
+            NavigationTargetObject  : String;
+            NavigationTargetAction  : String;
+            Priority                : String(20);
+            ProviderId              : String(32);
+            ActorId                 : String(20);
+            ActorType               : String(20);
+            ActorDisplayText        : String(120);
+            ActorImageURL           : String;
+            Recipients              : Composition of many Recipients
+                                          on Recipients.NotificationId = $self.Id;
+            Properties              : Composition of many NotifcationProperties
+                                          on Properties.NotificationId = $self.Id;
 
-            TargetParameters          : Composition of many NavigationTargetParams
-                                            on TargetParameters.NotificationId = $self.Id
+            TargetParameters        : Composition of many NavigationTargetParams
+                                          on TargetParameters.NotificationId = $self.Id
     }
 
     entity Recipients {
@@ -45,4 +43,33 @@ service NotificationService {
         key NotificationId : UUID;
             Value          : String;
     }
+
+    entity Notification {
+        OriginId                : String(200);
+        NotificationTypeKey     : String(32);
+        NotificationTypeVersion : String(20);
+        NavigationTargetObject  : String;
+        NavigationTargetAction  : String;
+        Priority                : String(20);
+        ActorId                 : String(20);
+        ActorType               : String(20);
+        ActorDisplayText        : String(120);
+        ActorImageURL           : String;
+        Properties              : array of {
+            ![Key]      : String;
+            Language    : String(2);
+            Value       : String;
+            Type        : String(20);
+            IsSensitive : Boolean;
+        };
+        Recipients              : array of {
+            RecipientId : String;
+        };
+        TargetParameters        : array of {
+            ![Key]      : String;
+            Value       : String;
+        }
+    }
+
+    action createNotification(notification : Notification) returns UUID;
 }

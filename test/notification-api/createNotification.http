@@ -1,0 +1,17 @@
+POST http://localhost:4004/notifications/createNotification HTTP/1.1
+Content-Type: application/json
+
+{
+    "notification": {
+        "NotificationTypeKey": "NotifType",
+        "NotificationTypeVersion": "1.0",
+        "Priority": "Medium",
+        "Properties": [
+            {
+                "Key": "notif_user",
+                "Language": "de",
+                "Value": "Muster"
+            }
+        ]
+    }
+}

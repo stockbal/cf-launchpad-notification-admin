@@ -1,175 +1,226 @@
 {
-    "_version": "1.45.0",
-    "sap.cloud": {
-        "public": true,
-        "service": "com.devepos.cflp.admin"
+  "_version": "1.45.0",
+  "sap.cloud": {
+    "public": true,
+    "service": "com.devepos.cflp.admin"
+  },
+  "sap.app": {
+    "id": "com.devepos.apps.cflp.notificationtypesadmin",
+    "type": "application",
+    "i18n": "i18n/i18n.properties",
+    "applicationVersion": {
+      "version": "0.0.1"
     },
-    "sap.app": {
-        "id": "com.devepos.apps.cflp.notificationtypesadmin",
-        "type": "application",
-        "i18n": "i18n/i18n.properties",
-        "applicationVersion": {
-            "version": "0.0.1"
-        },
-        "title": "{{appTitle}}",
-        "description": "{{appDescription}}",
-        "resources": "resources.json",
-        "sourceTemplate": {
-            "id": "@sap/generator-fiori:lrop",
-            "version": "1.7.6",
-            "toolsId": "39b32b7f-af3d-480e-8034-6b8031d80d0f"
-        },
-        "dataSources": {
-            "mainService": {
-                "uri": "/notification-types/",
-                "type": "OData",
-                "settings": {
-                    "annotations": [
-                        "annotation"
-                    ],
-                    "localUri": "localService/metadata.xml",
-                    "odataVersion": "4.0"
-                }
-            },
-            "annotation": {
-                "type": "ODataAnnotation",
-                "uri": "annotations/annotation.xml",
-                "settings": {
-                    "localUri": "annotations/annotation.xml"
-                }
-            }
-        },
-        "crossNavigation": {
-            "inbounds": {
-                "com-devepos-apps-cflp-notificationtypesadmin-inbound": {
-                    "signature": {
-                        "parameters": {},
-                        "additionalParameters": "allowed"
-                    },
-                    "semanticObject": "LaunchpadNotificationType",
-                    "action": "manage",
-                    "title": "{{flpTitle}}",
-                    "subTitle": "{{flpSubtitle}}",
-                    "icon": "sap-icon://key-user-settings"
-                }
-            }
+    "title": "{{appTitle}}",
+    "description": "{{appDescription}}",
+    "resources": "resources.json",
+    "sourceTemplate": {
+      "id": "@sap/generator-fiori:lrop",
+      "version": "1.7.6",
+      "toolsId": "39b32b7f-af3d-480e-8034-6b8031d80d0f"
+    },
+    "dataSources": {
+      "mainService": {
+        "uri": "/notification-types/",
+        "type": "OData",
+        "settings": {
+          "annotations": ["annotation"],
+          "localUri": "localService/metadata.xml",
+          "odataVersion": "4.0"
         }
-    },
-    "sap.ui": {
-        "technology": "UI5",
-        "icons": {
-            "icon": "",
-            "favIcon": "",
-            "phone": "",
-            "phone@2": "",
-            "tablet": "",
-            "tablet@2": ""
-        },
-        "deviceTypes": {
-            "desktop": true,
-            "tablet": true,
-            "phone": true
+      },
+      "notificationService": {
+        "uri": "/notifications/",
+        "type": "OData",
+        "settings": {
+          "odataVersion": "4.0"
         }
-    },
-    "sap.ui5": {
-        "flexEnabled": true,
-        "dependencies": {
-            "minUI5Version": "1.108.0",
-            "libs": {
-                "sap.m": {},
-                "sap.ui.core": {},
-                "sap.ushell": {},
-                "sap.fe.templates": {}
-            }
-        },
-        "contentDensities": {
-            "compact": true,
-            "cozy": true
-        },
-        "models": {
-            "i18n": {
-                "type": "sap.ui.model.resource.ResourceModel",
-                "settings": {
-                    "bundleName": "com.devepos.apps.cflp.notificationtypesadmin.i18n.i18n"
-                }
-            },
-            "": {
-                "dataSource": "mainService",
-                "preload": true,
-                "settings": {
-                    "synchronizationMode": "None",
-                    "operationMode": "Server",
-                    "autoExpandSelect": true,
-                    "earlyRequests": true
-                }
-            },
-            "@i18n": {
-                "type": "sap.ui.model.resource.ResourceModel",
-                "uri": "i18n/i18n.properties"
-            }
-        },
-        "resources": {
-            "css": []
-        },
-        "routing": {
-            "routes": [
-                {
-                    "pattern": ":?query:",
-                    "name": "NotificationTypesList",
-                    "target": "NotificationTypesList"
-                },
-                {
-                    "pattern": "NotificationTypes({key}):?query:",
-                    "name": "NotificationTypesObjectPage",
-                    "target": "NotificationTypesObjectPage"
-                }
-            ],
-            "targets": {
-                "NotificationTypesList": {
-                    "type": "Component",
-                    "id": "NotificationTypesList",
-                    "name": "sap.fe.templates.ListReport",
-                    "options": {
-                        "settings": {
-                            "entitySet": "NotificationTypes",
-                            "variantManagement": "Page",
-                            "navigation": {
-                                "NotificationTypes": {
-                                    "detail": {
-                                        "route": "NotificationTypesObjectPage"
-                                    }
-                                }
-                            },
-                            "initialLoad": "Enabled"
-                        }
-                    }
-                },
-                "NotificationTypesObjectPage": {
-                    "type": "Component",
-                    "id": "NotificationTypesObjectPage",
-                    "name": "sap.fe.templates.ObjectPage",
-                    "options": {
-                        "settings": {
-                            "editableHeaderContent": false,
-                            "entitySet": "NotificationTypes",
-                            "navigation": {},
-                            "controlConfiguration": {
-                                "texts/@com.sap.vocabularies.UI.v1.LineItem": {
-                                    "tableSettings": {
-                                        "creationMode": {
-                                            "name": "Inline"
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+      },
+      "annotation": {
+        "type": "ODataAnnotation",
+        "uri": "annotations/annotation.xml",
+        "settings": {
+          "localUri": "annotations/annotation.xml"
         }
+      }
     },
-    "sap.fiori": {
-        "registrationIds": [],
-        "archeType": "transactional"
+    "crossNavigation": {
+      "inbounds": {
+        "com-devepos-apps-cflp-notificationtypesadmin-inbound": {
+          "signature": {
+            "parameters": {},
+            "additionalParameters": "allowed"
+          },
+          "semanticObject": "LaunchpadNotificationType",
+          "action": "manage",
+          "title": "{{flpTitle}}",
+          "subTitle": "{{flpSubtitle}}",
+          "icon": "sap-icon://key-user-settings"
+        }
+      }
     }
+  },
+  "sap.ui": {
+    "technology": "UI5",
+    "icons": {
+      "icon": "",
+      "favIcon": "",
+      "phone": "",
+      "phone@2": "",
+      "tablet": "",
+      "tablet@2": ""
+    },
+    "deviceTypes": {
+      "desktop": true,
+      "tablet": true,
+      "phone": true
+    }
+  },
+  "sap.ui5": {
+    "flexEnabled": false,
+    "extends": {
+      "extensions": {
+        "sap.ui.controllerExtensions": {
+          "sap.fe.templates.ListReport.ListReportController": {
+            "controllerName": "com.devepos.apps.cflp.notificationtypesadmin.ext.controller.extendLP"
+          },
+          "sap.fe.templates.ObjectPage.ObjectPageController": {
+            "controllerName": "com.devepos.apps.cflp.notificationtypesadmin.ext.controller.extendOP"
+          }
+        }
+      }
+    },
+    "dependencies": {
+      "minUI5Version": "1.108.0",
+      "libs": {
+        "sap.m": {},
+        "sap.ui.core": {},
+        "sap.ushell": {},
+        "sap.fe.templates": {}
+      }
+    },
+    "contentDensities": {
+      "compact": true,
+      "cozy": true
+    },
+    "models": {
+      "i18n": {
+        "type": "sap.ui.model.resource.ResourceModel",
+        "settings": {
+          "bundleName": "com.devepos.apps.cflp.notificationtypesadmin.i18n.i18n"
+        }
+      },
+      "": {
+        "dataSource": "mainService",
+        "preload": true,
+        "settings": {
+          "synchronizationMode": "None",
+          "operationMode": "Server",
+          "autoExpandSelect": true,
+          "earlyRequests": true
+        }
+      },
+      "notification": {
+        "dataSource": "notificationService",
+        "preload": true,
+        "settings": {
+          "synchronizationMode": "None",
+          "operationMode": "Server",
+          "autoExpandSelect": true,
+          "earlyRequests": true
+        }
+      },
+      "@i18n": {
+        "type": "sap.ui.model.resource.ResourceModel",
+        "uri": "i18n/i18n.properties"
+      }
+    },
+    "resources": {
+      "css": []
+    },
+    "routing": {
+      "routes": [
+        {
+          "pattern": ":?query:",
+          "name": "NotificationTypesList",
+          "target": "NotificationTypesList"
+        },
+        {
+          "pattern": "NotificationTypes({key}):?query:",
+          "name": "NotificationTypesObjectPage",
+          "target": "NotificationTypesObjectPage"
+        }
+      ],
+      "targets": {
+        "NotificationTypesList": {
+          "type": "Component",
+          "id": "NotificationTypesList",
+          "name": "sap.fe.templates.ListReport",
+          "options": {
+            "settings": {
+              "entitySet": "NotificationTypes",
+              "variantManagement": "Page",
+              "navigation": {
+                "NotificationTypes": {
+                  "detail": {
+                    "route": "NotificationTypesObjectPage"
+                  }
+                }
+              },
+              "initialLoad": "Enabled",
+              "controlConfiguration": {
+                "@com.sap.vocabularies.UI.v1.LineItem": {
+                  "actions": {
+                    "createNotification": {
+                      "press": ".extension.com.devepos.apps.cflp.notificationtypesadmin.ext.controller.extendLP.onCreateNotification",
+                      "text": "{i18n>NotificationType_Actions_CreateNotification_text}",
+                      "visible": true,
+                      "requiresSelection": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "NotificationTypesObjectPage": {
+          "type": "Component",
+          "id": "NotificationTypesObjectPage",
+          "name": "sap.fe.templates.ObjectPage",
+          "options": {
+            "settings": {
+              "editableHeaderContent": false,
+              "entitySet": "NotificationTypes",
+              "content": {
+                "header": {
+                  "actions": {
+                    "createNotification": {
+                      "press": ".extension.com.devepos.apps.cflp.notificationtypesadmin.ext.controller.extendOP.onCreateNotification",
+                      "text": "{i18n>NotificationType_Actions_CreateNotification_text}",
+                      "visible": "{= %{IsActiveEntity} === true && %{syncedNotificationTypeID} !== null}",
+                      "enabled": true
+                    }
+                  }
+                }
+              },
+              "navigation": {},
+              "controlConfiguration": {
+                "texts/@com.sap.vocabularies.UI.v1.LineItem": {
+                  "tableSettings": {
+                    "creationMode": {
+                      "name": "Inline"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "sap.fiori": {
+    "registrationIds": [],
+    "archeType": "transactional"
+  }
 }
