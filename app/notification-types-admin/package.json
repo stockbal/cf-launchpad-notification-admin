@@ -1,28 +1,55 @@
 {
-    "name": "notification-types-admin",
-    "version": "0.0.1",
-    "description": "Manages Notification Types for Notifications in Launchpad Service",
-    "keywords": [
-        "ui5",
-        "openui5",
-        "sapui5"
-    ],
-    "main": "webapp/index.html",
-    "scripts": {
-        "deploy-config": "npx -p @sap/ux-ui5-tooling fiori add deploy-config cf",
-        "build:cf": "ui5 build preload --clean-dest --config ui5-deploy.yaml --include-task=generateCachebusterInfo"
-    },
-    "devDependencies": {
-        "@sap/ui5-builder-webide-extension": "^1.1.8",
-        "ui5-task-zipper": "^0.5.0",
-        "mbt": "^1.2.18",
-        "@ui5/cli": "^2.14.10"
-    },
-    "ui5": {
-        "dependencies": [
-            "@sap/ui5-builder-webide-extension",
-            "ui5-task-zipper",
-            "mbt"
-        ]
-    }
+  "name": "notification-types-admin",
+  "version": "0.0.1",
+  "description": "Manages Notification Types for Notifications in Launchpad Service",
+  "keywords": [
+    "ui5",
+    "openui5",
+    "sapui5"
+  ],
+  "main": "webapp/index.html",
+  "scripts": {
+    "deploy-config": "npx -p @sap/ux-ui5-tooling fiori add deploy-config cf",
+    "watch:ts": "babel src --out-dir webapp --source-maps true --extensions \".ts,.js\" --copy-files --watch",
+    "build:ts": "babel src --out-dir webapp --source-maps true --extensions \".ts,.js\" --copy-files",
+    "build:ui5": "ui5 build preload --clean-dest --config ui5-deploy.yaml --include-task=generateCachebusterInfo",
+    "build:cf": "run-s build:ts build:ui5"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.19.3",
+    "@babel/core": "^7.20.5",
+    "@babel/preset-env": "^7.20.2",
+    "@babel/preset-typescript": "^7.18.6",
+    "@sap/ui5-builder-webide-extension": "^1.1.8",
+    "@sapui5/ts-types-esm": "^1.108.4",
+    "@typescript-eslint/eslint-plugin": "^5.46.1",
+    "@typescript-eslint/parser": "^5.46.1",
+    "@ui5/cli": "^2.14.10",
+    "babel-preset-transform-ui5": "^7.0.5",
+    "eslint": "^8.29.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "mbt": "^1.2.18",
+    "npm-run-all": "^4.1.5",
+    "prettier": "^2.8.1",
+    "typescript": "^4.9.4",
+    "ui5-task-zipper": "^0.5.0"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead",
+    "not ie 11"
+  ],
+  "prettier": {
+    "arrowParens": "avoid",
+    "trailingComma": "none"
+  },
+  "ui5": {
+    "dependencies": [
+      "@sap/ui5-builder-webide-extension",
+      "ui5-task-zipper",
+      "mbt"
+    ]
+  }
 }

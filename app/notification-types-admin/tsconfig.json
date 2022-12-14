@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "target": "es2015",
+    "module": "es2015",
+    "lib": ["DOM", "ES2016", "ES2021"],
+    "skipLibCheck": true,
+    "preserveConstEnums": true,
+    "sourceMap": false,
+    "allowJs": true,
+    "strict": true,
+    "strictNullChecks": false,
+    "strictPropertyInitialization": false,
+    "allowSyntheticDefaultImports": true,
+    "rootDir": "./src",
+    "outDir": "./dist",
+    "baseUrl": "./",
+    "types": ["@sapui5/ts-types-esm/types"],
+    "paths": {
+      "com/devepos/apps/cflp/notificationtypesadmin/*": ["./src/*"]
+    }
+  },
+  "include": ["./src/**/*", "types"]
+}
