@@ -1,13 +1,19 @@
+import ColumnListItem from "sap/m/ColumnListItem";
 import Dialog from "sap/m/Dialog";
+import Input from "sap/m/Input";
 import MessageBox from "sap/m/MessageBox";
+import Table from "sap/m/Table";
 import Event from "sap/ui/base/Event";
 import BaseObject from "sap/ui/base/Object";
 import Control from "sap/ui/core/Control";
+import Core from "sap/ui/core/Core";
 import Fragment from "sap/ui/core/Fragment";
+import { ValueState } from "sap/ui/core/library";
 import View from "sap/ui/core/mvc/View";
 import JSONModel from "sap/ui/model/json/JSONModel";
 import Model from "sap/ui/model/Model";
 import Context from "sap/ui/model/odata/v4/Context";
+import ODataListBinding from "sap/ui/model/odata/v4/ODataListBinding";
 import ODataModel from "sap/ui/model/odata/v4/ODataModel";
 
 type ControllerExtension = {
@@ -30,6 +36,7 @@ export default class NotificationTester extends BaseObject {
   private _notifType: Context;
   private _notificationTestDialog: Dialog;
   private _dialogModel: any;
+  private static languageList: ODataListBinding;
 
   constructor(controllerExtension: ControllerExtension, notifType: Context) {
     super();
@@ -45,6 +52,9 @@ export default class NotificationTester extends BaseObject {
   }
 
   async onSubmit() {
+    if (!this._validateFields()) {
+      return;
+    }
     this._notificationTestDialog.setBusy(true);
     const notificationModel = this._ctrllerExt.getModel(
       "notification"
@@ -73,6 +83,24 @@ export default class NotificationTester extends BaseObject {
           "Error during notification creation"
       );
     }
+  }
+  private _validateFields(): boolean {
+    let isValid = true;
+    for (const ctrl of this._notificationTestDialog.getControlsByFieldGroupId(
+      "actionInput"
+    )) {
+      if (ctrl.isA("sap.m.Input")) {
+        const input = ctrl as Input;
+        if (input.getRequired() && input.getValue() === "") {
+          input.setValueState(ValueState.Error);
+          input.setValueStateText("Value required");
+          isValid = false;
+        } else {
+          input.setValueState(ValueState.None);
+        }
+      }
+    }
+    return isValid;
   }
 
   onCancel() {
@@ -130,6 +158,10 @@ export default class NotificationTester extends BaseObject {
       controller: this
     })) as Dialog;
 
+    // dialog.getControlsByFieldGroupId("actionInput").forEach(c => {
+    //   Core.getMessageManager().registerObject(c, true);
+    // });
+
     dialog.attachAfterClose(() => {
       this._ctrllerExt.getView().removeDependent(dialog);
       dialog.destroy();
@@ -139,12 +171,15 @@ export default class NotificationTester extends BaseObject {
     return dialog;
   }
 
-  private async _getLanguages() {
-    const languageList = (this._ctrllerExt.getModel() as ODataModel).bindList(
-      "/Languages"
-    );
-    const languageContexts = await languageList.requestContexts();
-    return languageContexts.map(c => c.getObject());
+  private async _getLanguages(): Promise<object[]> {
+    if (!NotificationTester.languageList) {
+      NotificationTester.languageList = (
+        this._ctrllerExt.getModel() as ODataModel
+      ).bindList("/Languages");
+    }
+    const languageContexts =
+      await NotificationTester.languageList.requestContexts();
+    return languageContexts.map(c => c.getObject() as object);
   }
 
   private _getTableItemsPath(event: Event) {
@@ -178,7 +213,7 @@ export default class NotificationTester extends BaseObject {
   private _getNotificationData() {
     const data = {
       Priority: "Medium",
-      Properties: [] as Selectable[],
+      Properties: [{}] as Selectable[],
       TargetParameters: [] as Selectable[],
       Recipients: [] as Selectable[]
     };

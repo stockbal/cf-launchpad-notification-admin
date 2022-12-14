@@ -1,6 +1,10 @@
 <core:FragmentDefinition xmlns:form="sap.ui.layout.form"
     xmlns="sap.m"
-    xmlns:core="sap.ui.core">
+    xmlns:core="sap.ui.core"
+    core:require="{
+      Integer: 'sap/ui/model/type/Integer',
+      String: 'sap/ui/model/type/String'
+    }">
 
     <Dialog id="dlgNotificationTest"
         title="{i18n>NotificationTester_Dialog_title}"
@@ -49,27 +53,35 @@
                 </Select>
 
                 <Label text="{i18n>NotificationTester_ActionProperty_NavigationTargetObject_title}" />
-                <Input value="{NavigationTargetObject}"/>
+                <Input value="{NavigationTargetObject}"
+                    fieldGroupIds="actionInput"/>
 
                 <Label text="{i18n>NotificationTester_ActionProperty_NavigationTargetAction_title}" />
-                <Input value="{NavigationTargetAction}"/>
+                <Input value="{NavigationTargetAction}"
+                    fieldGroupIds="actionInput"/>
 
                 <Label text="{i18n>NotificationTester_ActionProperty_OriginId_title}" />
-                <Input value="{OriginId}"/>
+                <Input value="{OriginId}"
+                    required="true"
+                    fieldGroupIds="actionInput"/>
 
                 <core:Title text="{i18n>NotificationTester_Form_Sections_Actor_title}"/>
                 <Label text="{i18n>NotificationTester_ActionProperty_ActorId_title}" />
-                <Input value="{ActorId}"/>
+                <Input value="{ActorId}"
+                    fieldGroupIds="actionInput"/>
 
                 <Label text="{i18n>NotificationTester_ActionProperty_ActorType_title}" />
-                <Input value="{ActorType}"/>
+                <Input value="{ActorType}"
+                    fieldGroupIds="actionInput"/>
 
                 <Label text="{i18n>NotificationTester_ActionProperty_ActorDisplayText_title}" />
-                <Input value="{ActorDisplayText}"/>
+                <Input value="{ActorDisplayText}"
+                    fieldGroupIds="actionInput"/>
 
                 <Label text="{i18n>NotificationTester_ActionProperty_ActorImageURL_title}" />
                 <Input value="{ActorImageURL}"
-                    type="Url"/>
+                    type="Url"
+                    fieldGroupIds="actionInput"/>
             </form:SimpleForm>
 
             <Table id="tblProperties"
@@ -111,17 +123,24 @@
                 <items>
                     <ColumnListItem selected="{$selected}">
                         <cells>
-                            <Input value="{Key}"/>
+                            <Input value="{Key}"
+                                required="true"
+                                fieldGroupIds="actionInput"/>
                             <Select selectedKey="{Language}"
+                                required="true"
                                 items="{/Languages}">
                                 <items>
                                     <core:Item key="{code}"
                                         text="{name}"/>
                                 </items>
                             </Select>
-                            <Input value="{Type}" />
-                            <Input value="{Value}" />
-                            <Switch state="{IsSensitive}" />
+                            <Input value="{Type}"
+                                required="true"
+                                fieldGroupIds="actionInput"/>
+                            <Input value="{Value}"
+                                fieldGroupIds="actionInput"/>
+                            <Switch state="{IsSensitive}"
+                                fieldGroupIds="actionInput"/>
                         </cells>
                     </ColumnListItem>
                 </items>
@@ -156,8 +175,11 @@
                 <items>
                     <ColumnListItem selected="{$selected}">
                         <cells>
-                            <Input value="{Key}"/>
-                            <Input value="{Value}" />
+                            <Input value="{Key}"
+                                fieldGroupIds="actionInput"
+                                required="true"/>
+                            <Input value="{Value}"
+                                fieldGroupIds="actionInput"/>
                         </cells>
                     </ColumnListItem>
                 </items>
@@ -189,7 +211,9 @@
                 <items>
                     <ColumnListItem selected="{$selected}">
                         <cells>
-                            <Input value="{Recipient}" />
+                            <Input value="{Recipient}"
+                                required="true"
+                                fieldGroupIds="actionInput"/>
                         </cells>
                     </ColumnListItem>
                 </items>
