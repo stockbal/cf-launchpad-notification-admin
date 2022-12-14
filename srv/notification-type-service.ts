@@ -1,4 +1,5 @@
 import { ApplicationService } from "@sap/cds";
+import { AxiosError } from "axios";
 import { ExtNotificationTypeService } from "./lib/api/notification-type";
 import { NotificationTypeServiceTypes as srv, ExternalNotificationType } from "./types";
 
@@ -59,9 +60,15 @@ export class NotificationTypeService extends ApplicationService {
 
       if (notificationType?.syncedNotificationTypeID) {
         // delete notification type from external service
-        await ExtNotificationTypeService.deleteNotificationType(
-          notificationType.syncedNotificationTypeID
-        );
+        try {
+          await ExtNotificationTypeService.deleteNotificationType(
+            notificationType.syncedNotificationTypeID
+          );
+        } catch (error) {
+          if (error instanceof AxiosError && error.response?.status !== 404) {
+            throw error;
+          }
+        }
       }
     });
     await super.init();
