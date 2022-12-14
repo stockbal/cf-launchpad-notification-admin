@@ -12,7 +12,7 @@
     "strictPropertyInitialization": false,
     "allowSyntheticDefaultImports": true,
     "rootDir": "./src",
-    "outDir": "./dist",
+    "outDir": "./webapp",
     "baseUrl": "./",
     "types": ["@sapui5/ts-types-esm/types"],
     "paths": {

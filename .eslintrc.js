@@ -5,13 +5,13 @@ module.exports = {
     es6: true,
     es2020: true,
     jest: true,
-    mocha: true,
+    mocha: true
   },
   extends: [
     "prettier",
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
-    "plugin:@typescript-eslint/recommended-requiring-type-checking",
+    "plugin:@typescript-eslint/recommended-requiring-type-checking"
   ],
   globals: {
     SELECT: true,
@@ -23,22 +23,25 @@ module.exports = {
     CDL: true,
     CQL: true,
     CXL: true,
-    cds: true,
+    cds: true
   },
   parser: "@typescript-eslint/parser",
+  parserOptions: {
+    project: "./tsconfig.eslint.json",
+    tsconfigRootDir: __dirname
+  },
   plugins: ["prettier", "@typescript-eslint/eslint-plugin"],
   rules: {
     "@typescript-eslint/no-explicit-any": "off",
-    "@typescript-eslint/no-non-null-assertion": "off",
+    // "@typescript-eslint/no-non-null-assertion": "off",
     "@typescript-eslint/no-unsafe-assignment": "off",
     "@typescript-eslint/no-unsafe-call": "off",
-    "@typescript-eslint/no-floating-promises": "off",
+    // "@typescript-eslint/no-floating-promises": "off",
     "@typescript-eslint/no-unsafe-member-access": "off",
     "@typescript-eslint/no-unsafe-argument": "off",
     "@typescript-eslint/ban-types": "off",
     "@typescript-eslint/ban-ts-comment": "off",
     "no-prototype-builtins": "off",
-    "prettier/prettier": ["error"],
-    "@typescript-eslint/no-namespace": "off",
-  },
+    "prettier/prettier": ["error"]
+  }
 };
