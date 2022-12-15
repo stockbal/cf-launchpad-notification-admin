@@ -1,12 +1,67 @@
-# notification-admin
+# Admin Service/UI for SAP Launchpad Notification Service
 
-Simple Fiori Elements application on top of CAP application to manage the notification types for the SAP Launchpad service.
+Project to allow an easier maintenance of notification types for the SAP Launchpad Notification Service (see [here](https://help.sap.com/docs/Launchpad_Service/8c8e1958338140699bd4811b37b82ece/fe40c015d2b24487945f4b40ed86534e.html?locale=en-US)).
+
+This project adds the following capabilities to the Notification service.
+
+- UI for easy maintenance -> enable business users
+- Easy synchronization of multiple entries to and from the notification service (not yet implemented)
+
+## Features
+
+### Backend
+
+Backend consists of a simple CAP application which persists the notification types to a SAP HANA Cloud database.
+
+### User Interface
+
+Easy to use Fiori Elements application with draft capabilities to maintain notification types for SAP Launchpad Notification Service. Saving or deleting an entity triggers the synchronization to the notification service
+
+![Object Page to maintain Notification Type](./doc/notification-type-op.png)
+
+Allows for direct testing of the notification type by creating a notification
+![Dialog for Notification Testing](./doc/notification-dialog.png)
+
+## Usage
+
+### Preconditions
+
+- Existing SAP BTP Subaccount with the following entitlements:
+  | Service                                    | Plan                  |
+  | ------------------------------------------ | --------------------- |
+  | Authorization and Trust Management Service | application           |
+  | SAP HANA Schemas & HDI Containers          | hdi-shared            |
+  | Destination Service                        | lite                  |
+  | HTML5 Application Repository Service       | app-host, app-runtime |
+
+- Cloud Foundry Environment is enabled in the subaccount
+- Space is created
+- SAP HANA Cloud Database exists in space or is shared
+
+### Deployment
+
+- Logon to subaccount space with authorized user via Cloud Foundry CLI
+- Run command `npm i` in shell
+- Run command `npm run build` in shell
+- Run command `npm run deploy` in shell
+
+### Manual Steps after Deployment
+
+1. Assign role collection `NotificationTypesAdmin` to users who need access to the application
+2. Add the application "Manage Notification Types" to a SAP Launchpad Service Site
+
+### Configuration of SAP Launchpad Notification Service
+
+1. Subscribe to SAP Launchpad Service
+2. Navigate to Launchpad Landing Page
+3. Enable Notifications in the settings section
+4. Create a destination with the notification service credentials in your subaccount named `SAP_Notifications` (see [here](https://help.sap.com/docs/Launchpad_Service/8c8e1958338140699bd4811b37b82ece/d5429a2a5d9a4425a461aa06c4ee84e4.html?locale=en-US#configure-the-destination-to-the-notifications-service)).
 
 ## Local Setup for `husky`
 
 Run `npx husky install` to install git hooks
 
-## Configure `.env` file for API testing
+## Configure `.env` file for VS Code REST API tests
 
 Template for `.env` file
 
