@@ -13,15 +13,13 @@ import Context from "sap/ui/model/odata/v4/Context";
 import ODataContextBinding from "sap/ui/model/odata/v4/ODataContextBinding";
 import ODataListBinding from "sap/ui/model/odata/v4/ODataListBinding";
 import ODataModel from "sap/ui/model/odata/v4/ODataModel";
+
 import FieldValidator from "./FieldValidator";
+import { prepareArraysForTableBinding, Selectable, TemplateableArray } from "./modelEnhancements";
 
 type ControllerExtension = {
   getModel(name?: string): Model;
   getView(): View;
-};
-
-type Selectable = {
-  $selected?: boolean;
 };
 
 type NotificationType = {
@@ -29,8 +27,11 @@ type NotificationType = {
   NotificationTypeVersion: string;
   TemplateLanguage: "" | "Mustache";
   Templates: {
-    Language: string;
+    Language: {
+      code: string;
+    };
     TemplateSensitive: string;
+    Subtitle: string;
   }[];
 };
 
@@ -39,9 +40,9 @@ type DialogModelData = {
     Priority: string;
     NotificationTypeKey: string;
     NotificationTypeVersion: string;
-    Properties: Selectable[];
-    TargetParameters: Selectable[];
-    Recipients: Selectable[];
+    Properties: TemplateableArray<Selectable>;
+    TargetParameters: TemplateableArray<Selectable>;
+    Recipients: TemplateableArray<Selectable>;
   };
   Languages: object[];
 };
@@ -126,7 +127,7 @@ export default class NotificationTester extends BaseObject {
     if (!itemsPath) {
       return;
     }
-    const itemsArray = this.dialogModel.getProperty(itemsPath);
+    const itemsArray = this.dialogModel.getProperty(itemsPath) as TemplateableArray<any>;
     if (itemsArray) {
       itemsArray.push({});
       this.dialogModel.refresh();
@@ -156,7 +157,7 @@ export default class NotificationTester extends BaseObject {
 
   private async createDialog(): Promise<Dialog> {
     this.dialogModel = new JSONModel({
-      notification: await this.getNotificationData(),
+      notification: await this.getNotificationModelData(),
       Languages: await this.getLanguages()
     });
 
@@ -253,25 +254,31 @@ export default class NotificationTester extends BaseObject {
     });
   }
 
-  private async getNotificationData() {
+  private async getNotificationModelData() {
     const expandedNotifType = await this.getExpandedNotificationType();
 
     const data = {
       Priority: "Medium",
       NotificationTypeKey: expandedNotifType.NotificationTypeKey,
       NotificationTypeVersion: expandedNotifType.NotificationTypeVersion,
-      Properties: [] as Selectable[],
-      TargetParameters: [] as Selectable[],
-      Recipients: [] as Selectable[]
+      Properties: Object.assign([], {
+        getTemplate: () => ({
+          Language: sap.ui.getCore().getConfiguration().getLocale().getLanguage().toLowerCase()
+        })
+      }),
+      TargetParameters: [],
+      Recipients: []
     } as DialogModelData["notification"];
 
-    [data.Properties, data.TargetParameters, data.Recipients].forEach(array => {
-      Object.defineProperty(array, "hasSelections", {
-        get() {
-          return !!array.find(p => p.$selected);
-        }
-      });
-    });
+    prepareArraysForTableBinding([data.Properties, data.TargetParameters, data.Recipients]);
+
+    // extract placeholder variables from template
+    const placeholders = this.getTemplatePlacholders(expandedNotifType);
+
+    for (const placeholder of placeholders) {
+      data.Properties.push({ Key: placeholder });
+    }
+
     return data;
   }
 
@@ -281,9 +288,42 @@ export default class NotificationTester extends BaseObject {
       .bindContext(this.notifType.getPath(), undefined, {
         $expand: "Templates",
         $select:
-          "NotificationTypeKey,NotificationTypeVersion,TemplateLanguage,Templates/Language,Templates/TemplateSensitive"
+          "NotificationTypeKey,NotificationTypeVersion,TemplateLanguage,Templates/Language,Templates/TemplateSensitive,Templates/Subtitle"
       }) as ODataContextBinding;
 
     return (await expandedNotifTypeContext.requestObject()) as NotificationType;
+  }
+
+  private getTemplatePlacholders(expandedNotifType: NotificationType) {
+    // determine template for current language
+    const currentLanguage = sap.ui
+      .getCore()
+      .getConfiguration()
+      .getLocale()
+      .getLanguage()
+      .toLowerCase();
+
+    const template =
+      expandedNotifType.Templates.find(t => t.Language.code === currentLanguage) ??
+      (currentLanguage !== "en" && expandedNotifType.Templates.find(t => t.Language.code === "en"));
+
+    if (!template) {
+      return [];
+    }
+
+    const extractPlaceHolders = (text: string): string[] => {
+      return [
+        ...(expandedNotifType.TemplateLanguage === "Mustache"
+          ? text.matchAll(/\{\{(\w+)\}\}/g)
+          : text.matchAll(/\{(\w+)\}/g))
+      ].map(matches => matches[1]);
+    };
+
+    return [
+      ...new Set<string>([
+        ...extractPlaceHolders(template.TemplateSensitive),
+        ...extractPlaceHolders(template.Subtitle)
+      ])
+    ];
   }
 }
