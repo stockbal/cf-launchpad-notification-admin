@@ -62,19 +62,23 @@
 
                 <Label text="{i18n>NotificationTester_ActionProperty_OriginId_title}" />
                 <Input value="{OriginId}"
+                    maxLength="200"
                     fieldGroupIds="actionInput"/>
 
                 <core:Title text="{i18n>NotificationTester_Form_Sections_Actor_title}"/>
                 <Label text="{i18n>NotificationTester_ActionProperty_ActorId_title}" />
                 <Input value="{ActorId}"
+                    maxLength="20"
                     fieldGroupIds="actionInput"/>
 
                 <Label text="{i18n>NotificationTester_ActionProperty_ActorType_title}" />
                 <Input value="{ActorType}"
+                    maxLength="20"
                     fieldGroupIds="actionInput"/>
 
                 <Label text="{i18n>NotificationTester_ActionProperty_ActorDisplayText_title}" />
                 <Input value="{ActorDisplayText}"
+                    maxLength="120"
                     fieldGroupIds="actionInput"/>
 
                 <Label text="{i18n>NotificationTester_ActionProperty_ActorImageURL_title}" />
@@ -136,8 +140,10 @@
                             </Select>
                             <Input value="{Type}"
                                 required="true"
+                                maxLength="20"
                                 fieldGroupIds="actionInput"/>
                             <Input value="{Value}"
+                                required="true"
                                 fieldGroupIds="actionInput"/>
                             <Switch state="{IsSensitive}"
                                 fieldGroupIds="actionInput"/>
@@ -180,6 +186,7 @@
                                 fieldGroupIds="actionInput"
                                 required="true"/>
                             <Input value="{Value}"
+                                required="true"
                                 fieldGroupIds="actionInput"/>
                         </cells>
                     </ColumnListItem>
