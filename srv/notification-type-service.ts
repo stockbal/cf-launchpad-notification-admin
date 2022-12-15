@@ -12,6 +12,8 @@ export class NotificationTypeService extends ApplicationService {
         req.reject(422, "NT_NO_TEMPLATES_PROVIDED");
       }
 
+      notificationType.TemplateLanguage_code = notificationType.TemplateLanguage_code || "";
+
       // map type to external API
       const externalNotificationType = {
         NotificationTypeVersion: notificationType.NotificationTypeVersion,

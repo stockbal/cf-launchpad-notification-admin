@@ -16,9 +16,9 @@ entity NotificationTypes : managed, cuid {
     @mandatory
     NotificationTypeVersion  : String(20);
     @title : '{i18n>NotificationType_Type_IsGroupable_title}'
-    IsGroupable              : Boolean;
+    IsGroupable              : Boolean default false;
     @title : '{i18n>NotificationType_Type_TemplateLanguage_title}'
-    TemplateLanguage  : Association to TemplateLanguages;
+    TemplateLanguage         : Association to TemplateLanguages;
     syncedNotificationTypeID : UUID;
     Templates                : Composition of many Templates
                                    on Templates.notificationType = $self;
@@ -30,8 +30,7 @@ entity Templates : managed, cuid {
     @mandatory
     Language          : Language;
     @title : '{i18n>NotificationType_Template_Public_title}'
-    @mandatory
-    TemplatePublic    : String(250) not null;
+    TemplatePublic    : String(250) default '';
     @title : '{i18n>NotificationType_Template_Sensitive_title}'
     @mandatory
     TemplateSensitive : String(250) not null;

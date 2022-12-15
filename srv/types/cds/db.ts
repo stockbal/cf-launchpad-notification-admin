@@ -40,7 +40,7 @@ export interface NotificationTypes {
   ID: string;
   NotificationTypeKey: string;
   NotificationTypeVersion: string;
-  IsGroupable: boolean;
+  IsGroupable?: boolean;
   TemplateLanguage?: TemplateLanguages;
   TemplateLanguage_code?: string;
   syncedNotificationTypeID: string;
@@ -71,7 +71,7 @@ export interface Templates {
   ID: string;
   Language: Languages;
   Language_code?: Locale;
-  TemplatePublic: string;
+  TemplatePublic?: string;
   TemplateSensitive: string;
   TemplateGrouped: string;
   Description: string;
