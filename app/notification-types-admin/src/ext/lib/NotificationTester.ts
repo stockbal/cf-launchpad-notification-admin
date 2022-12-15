@@ -86,12 +86,8 @@ export default class NotificationTester extends BaseObject {
     }
 
     this.notificationTestDialog.setBusy(true);
-    const notificationModel = this.ctrllerExt.getModel(
-      "notification"
-    ) as ODataModel;
-    const actionBinding = notificationModel.bindContext(
-      "/createNotification(...)"
-    );
+    const notificationModel = this.ctrllerExt.getModel("notification") as ODataModel;
+    const actionBinding = notificationModel.bindContext("/createNotification(...)");
     const actionParam = this.dialogModel.getProperty("/notification");
 
     // payload needs to be cleaned up before it can be used
@@ -186,8 +182,7 @@ export default class NotificationTester extends BaseObject {
 
     // tables need to be handled separately as item controls are created
     // on the fly
-    const possibleTables =
-      this.notificationTestDialog.getControlsByFieldGroupId("editableTable");
+    const possibleTables = this.notificationTestDialog.getControlsByFieldGroupId("editableTable");
 
     for (const table of possibleTables) {
       if (!(table instanceof Table)) {
@@ -198,9 +193,7 @@ export default class NotificationTester extends BaseObject {
         for (const item of items) {
           if (!item.data("__handlerRegistered")) {
             this.validator.registerFields(
-              item
-                .getCells()
-                .filter(c => c.getFieldGroupIds().includes("actionInput"))
+              item.getCells().filter(c => c.getFieldGroupIds().includes("actionInput"))
             );
             item.data("__handlerRegistered", true);
           }
@@ -211,21 +204,17 @@ export default class NotificationTester extends BaseObject {
 
   private async getLanguages(): Promise<object[]> {
     if (!NotificationTester.languageList) {
-      NotificationTester.languageList = (
-        this.ctrllerExt.getModel() as ODataModel
-      ).bindList("/Languages");
+      NotificationTester.languageList = (this.ctrllerExt.getModel() as ODataModel).bindList(
+        "/Languages"
+      );
     }
-    const languageContexts =
-      await NotificationTester.languageList.requestContexts();
+    const languageContexts = await NotificationTester.languageList.requestContexts();
     return languageContexts.map(c => c.getObject() as object);
   }
 
   private isFormValid(): boolean {
     // check if model contains at least one recipient
-    if (
-      (this.dialogModel.getData() as DialogModelData).notification.Recipients
-        .length === 0
-    ) {
+    if ((this.dialogModel.getData() as DialogModelData).notification.Recipients.length === 0) {
       MessageBox.error(
         this.ctrllerExt
           .getModel("i18n")

@@ -8,9 +8,6 @@ import NotificationTester from "../lib/NotificationTester";
  */
 export default class extendOP extends ControllerExtension {
   async onCreateNotification(context: Context) {
-    await new NotificationTester(
-      (this as any).base,
-      context
-    ).createNotification();
+    await new NotificationTester((this as any).base, context).createNotification();
   }
 }

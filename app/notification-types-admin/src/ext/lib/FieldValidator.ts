@@ -50,9 +50,7 @@ export default class FieldValidator {
 
     for (const ctrl of controls) {
       if (ctrl instanceof Input) {
-        const bindingType = (
-          ctrl.getBinding("value") as PropertyBinding
-        )?.getType() as SimpleType;
+        const bindingType = (ctrl.getBinding("value") as PropertyBinding)?.getType() as SimpleType;
 
         if (bindingType) {
           try {

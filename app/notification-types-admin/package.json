@@ -39,7 +39,8 @@
   ],
   "prettier": {
     "arrowParens": "avoid",
-    "trailingComma": "none"
+    "trailingComma": "none",
+    "printWidth": 100
   },
   "ui5": {
     "dependencies": [
