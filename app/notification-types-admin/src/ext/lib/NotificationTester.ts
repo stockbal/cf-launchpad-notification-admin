@@ -10,6 +10,7 @@ import View from "sap/ui/core/mvc/View";
 import JSONModel from "sap/ui/model/json/JSONModel";
 import Model from "sap/ui/model/Model";
 import Context from "sap/ui/model/odata/v4/Context";
+import ODataContextBinding from "sap/ui/model/odata/v4/ODataContextBinding";
 import ODataListBinding from "sap/ui/model/odata/v4/ODataListBinding";
 import ODataModel from "sap/ui/model/odata/v4/ODataModel";
 import FieldValidator from "./FieldValidator";
@@ -21,6 +22,28 @@ type ControllerExtension = {
 
 type Selectable = {
   $selected?: boolean;
+};
+
+type NotificationType = {
+  NotificationTypeKey: string;
+  NotificationTypeVersion: string;
+  TemplateLanguage: "" | "Mustache";
+  Templates: {
+    Language: string;
+    TemplateSensitive: string;
+  }[];
+};
+
+type DialogModelData = {
+  notification: {
+    Priority: string;
+    NotificationTypeKey: string;
+    NotificationTypeVersion: string;
+    Properties: Selectable[];
+    TargetParameters: Selectable[];
+    Recipients: Selectable[];
+  };
+  Languages: object[];
 };
 
 const FRAGMENT_ID = "notificationTestFragment";
@@ -53,12 +76,15 @@ export default class NotificationTester extends BaseObject {
 
   async onSubmit() {
     if (
-      !(await this.validator.validateControls(
-        this.notificationTestDialog.getControlsByFieldGroupId("actionInput")
-      ))
+      !(
+        (await this.validator.validateControls(
+          this.notificationTestDialog.getControlsByFieldGroupId("actionInput")
+        )) && this.isFormValid()
+      )
     ) {
       return;
     }
+
     this.notificationTestDialog.setBusy(true);
     const notificationModel = this.ctrllerExt.getModel(
       "notification"
@@ -75,6 +101,7 @@ export default class NotificationTester extends BaseObject {
       actionParam.Recipients
     ]);
     actionBinding.setParameter("notification", actionParam);
+
     try {
       await actionBinding.execute();
       this.notificationTestDialog.close();
@@ -133,7 +160,7 @@ export default class NotificationTester extends BaseObject {
 
   private async createDialog(): Promise<Dialog> {
     this.dialogModel = new JSONModel({
-      notification: this.getNotificationData(),
+      notification: await this.getNotificationData(),
       Languages: await this.getLanguages()
     });
 
@@ -193,6 +220,22 @@ export default class NotificationTester extends BaseObject {
     return languageContexts.map(c => c.getObject() as object);
   }
 
+  private isFormValid(): boolean {
+    // check if model contains at least one recipient
+    if (
+      (this.dialogModel.getData() as DialogModelData).notification.Recipients
+        .length === 0
+    ) {
+      MessageBox.error(
+        this.ctrllerExt
+          .getModel("i18n")
+          .getProperty("NotificationTester_Tables_Recipients_noDataProvided")
+      );
+      return false;
+    }
+    return true;
+  }
+
   private getTableItemsPath(event: Event) {
     let control = event?.getSource() as Control;
 
@@ -221,13 +264,17 @@ export default class NotificationTester extends BaseObject {
     });
   }
 
-  private getNotificationData() {
+  private async getNotificationData() {
+    const expandedNotifType = await this.getExpandedNotificationType();
+
     const data = {
       Priority: "Medium",
+      NotificationTypeKey: expandedNotifType.NotificationTypeKey,
+      NotificationTypeVersion: expandedNotifType.NotificationTypeVersion,
       Properties: [] as Selectable[],
       TargetParameters: [] as Selectable[],
       Recipients: [] as Selectable[]
-    };
+    } as DialogModelData["notification"];
 
     [data.Properties, data.TargetParameters, data.Recipients].forEach(array => {
       Object.defineProperty(array, "hasSelections", {
@@ -237,5 +284,17 @@ export default class NotificationTester extends BaseObject {
       });
     });
     return data;
+  }
+
+  private async getExpandedNotificationType(): Promise<NotificationType> {
+    const expandedNotifTypeContext = this.ctrllerExt
+      .getModel()
+      .bindContext(this.notifType.getPath(), undefined, {
+        $expand: "Templates",
+        $select:
+          "NotificationTypeKey,NotificationTypeVersion,TemplateLanguage,Templates/Language,Templates/TemplateSensitive"
+      }) as ODataContextBinding;
+
+    return (await expandedNotifTypeContext.requestObject()) as NotificationType;
   }
 }
