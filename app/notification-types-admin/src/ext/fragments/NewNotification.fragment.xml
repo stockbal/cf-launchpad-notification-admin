@@ -62,7 +62,6 @@
 
                 <Label text="{i18n>NotificationTester_ActionProperty_OriginId_title}" />
                 <Input value="{OriginId}"
-                    required="true"
                     fieldGroupIds="actionInput"/>
 
                 <core:Title text="{i18n>NotificationTester_Form_Sections_Actor_title}"/>
@@ -86,6 +85,7 @@
 
             <Table id="tblProperties"
                 items="{Properties}"
+                fieldGroupIds="editableTable"
                 fixedLayout="Strict"
                 mode="MultiSelect">
                 <headerToolbar>
@@ -128,7 +128,7 @@
                                 fieldGroupIds="actionInput"/>
                             <Select selectedKey="{Language}"
                                 required="true"
-                                items="{/Languages}">
+                                items="{path: '/Languages', templateShareable: true}">
                                 <items>
                                     <core:Item key="{code}"
                                         text="{name}"/>
@@ -147,6 +147,7 @@
             </Table>
             <Table id="tblTargetParams"
                 mode="MultiSelect"
+                fieldGroupIds="editableTable"
                 fixedLayout="Strict"
                 items="{TargetParameters}">
                 <headerToolbar>
@@ -186,6 +187,7 @@
             </Table>
             <Table id="tblRecipients"
                 mode="MultiSelect"
+                fieldGroupIds="editableTable"
                 fixedLayout="Strict"
                 items="{Recipients}">
                 <headerToolbar>

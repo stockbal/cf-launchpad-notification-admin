@@ -1,20 +1,18 @@
 import ColumnListItem from "sap/m/ColumnListItem";
 import Dialog from "sap/m/Dialog";
-import Input from "sap/m/Input";
 import MessageBox from "sap/m/MessageBox";
 import Table from "sap/m/Table";
 import Event from "sap/ui/base/Event";
 import BaseObject from "sap/ui/base/Object";
 import Control from "sap/ui/core/Control";
-import Core from "sap/ui/core/Core";
 import Fragment from "sap/ui/core/Fragment";
-import { ValueState } from "sap/ui/core/library";
 import View from "sap/ui/core/mvc/View";
 import JSONModel from "sap/ui/model/json/JSONModel";
 import Model from "sap/ui/model/Model";
 import Context from "sap/ui/model/odata/v4/Context";
 import ODataListBinding from "sap/ui/model/odata/v4/ODataListBinding";
 import ODataModel from "sap/ui/model/odata/v4/ODataModel";
+import FieldValidator from "./FieldValidator";
 
 type ControllerExtension = {
   getModel(name?: string): Model;
@@ -32,40 +30,46 @@ const FRAGMENT_ID = "notificationTestFragment";
  * @namespace com.devepos.apps.cflp.notificationtypesadmin.ext.lib
  */
 export default class NotificationTester extends BaseObject {
-  private _ctrllerExt: ControllerExtension;
-  private _notifType: Context;
-  private _notificationTestDialog: Dialog;
-  private _dialogModel: any;
+  private ctrllerExt: ControllerExtension;
+  private notifType: Context;
+  private notificationTestDialog: Dialog;
+  private dialogModel: JSONModel;
+  private validator: FieldValidator;
   private static languageList: ODataListBinding;
 
   constructor(controllerExtension: ControllerExtension, notifType: Context) {
     super();
-    this._ctrllerExt = controllerExtension;
-    this._notifType = notifType;
+    this.ctrllerExt = controllerExtension;
+    this.notifType = notifType;
+    this.validator = new FieldValidator(this.ctrllerExt);
   }
 
   async createNotification() {
-    this._notificationTestDialog = await this._createDialog();
-
-    this._ctrllerExt.getView().addDependent(this._notificationTestDialog);
-    this._notificationTestDialog.open();
+    this.notificationTestDialog = await this.createDialog();
+    this.registerHandlers();
+    this.ctrllerExt.getView().addDependent(this.notificationTestDialog);
+    this.notificationTestDialog.open();
   }
 
   async onSubmit() {
-    if (!this._validateFields()) {
+    if (
+      !(await this.validator.validateControls(
+        this.notificationTestDialog.getControlsByFieldGroupId("actionInput")
+      ))
+    ) {
       return;
     }
-    this._notificationTestDialog.setBusy(true);
-    const notificationModel = this._ctrllerExt.getModel(
+    this.notificationTestDialog.setBusy(true);
+    const notificationModel = this.ctrllerExt.getModel(
       "notification"
     ) as ODataModel;
     const actionBinding = notificationModel.bindContext(
       "/createNotification(...)"
     );
-    const actionParam = this._dialogModel.getProperty("/notification");
+    const actionParam = this.dialogModel.getProperty("/notification");
 
     // payload needs to be cleaned up before it can be used
-    this._removeComputedProperties([
+    this.removeComputedProperties([
       actionParam.Properties,
       actionParam.TargetParameters,
       actionParam.Recipients
@@ -73,10 +77,10 @@ export default class NotificationTester extends BaseObject {
     actionBinding.setParameter("notification", actionParam);
     try {
       await actionBinding.execute();
-      this._notificationTestDialog.close();
-      this._notificationTestDialog = null;
+      this.notificationTestDialog.close();
+      this.notificationTestDialog = null;
     } catch (error) {
-      this._notificationTestDialog.setBusy(false);
+      this.notificationTestDialog.setBusy(false);
       MessageBox.error(
         typeof error === "string" ||
           (error as any)?.error?.message ||
@@ -84,57 +88,38 @@ export default class NotificationTester extends BaseObject {
       );
     }
   }
-  private _validateFields(): boolean {
-    let isValid = true;
-    for (const ctrl of this._notificationTestDialog.getControlsByFieldGroupId(
-      "actionInput"
-    )) {
-      if (ctrl.isA("sap.m.Input")) {
-        const input = ctrl as Input;
-        if (input.getRequired() && input.getValue() === "") {
-          input.setValueState(ValueState.Error);
-          input.setValueStateText("Value required");
-          isValid = false;
-        } else {
-          input.setValueState(ValueState.None);
-        }
-      }
-    }
-    return isValid;
-  }
 
   onCancel() {
-    this._notificationTestDialog.close();
+    this.notificationTestDialog.close();
   }
 
   /**
    * Adds new line to table via model property update
    *
-   * @param {object} event the event object
+   * @param event the event object
    */
   onAddTableLine(event: Event) {
-    const itemsPath = this._getTableItemsPath(event);
+    const itemsPath = this.getTableItemsPath(event);
     if (!itemsPath) {
       return;
     }
-    const itemsArray = this._dialogModel.getProperty(itemsPath);
+    const itemsArray = this.dialogModel.getProperty(itemsPath);
     if (itemsArray) {
       itemsArray.push({});
-      this._dialogModel.refresh();
+      this.dialogModel.refresh();
     }
   }
 
   /**
    * Deletes selected rows from table model
-   *
-   * @param {object} event the event object
+   * @param event the event object
    */
   onDeleteTableLine(event: Event) {
-    const itemsPath = this._getTableItemsPath(event);
+    const itemsPath = this.getTableItemsPath(event);
     if (!itemsPath) {
       return;
     }
-    const items = this._dialogModel.getProperty(itemsPath);
+    const items = this.dialogModel.getProperty(itemsPath);
 
     // Delete the selected items
     for (let i = items.length - 1; i >= 0; i--) {
@@ -143,13 +128,13 @@ export default class NotificationTester extends BaseObject {
       }
     }
 
-    this._dialogModel.refresh();
+    this.dialogModel.refresh();
   }
 
-  private async _createDialog(): Promise<Dialog> {
-    this._dialogModel = new JSONModel({
-      notification: this._getNotificationData(),
-      Languages: await this._getLanguages()
+  private async createDialog(): Promise<Dialog> {
+    this.dialogModel = new JSONModel({
+      notification: this.getNotificationData(),
+      Languages: await this.getLanguages()
     });
 
     const dialog = (await Fragment.load({
@@ -158,23 +143,49 @@ export default class NotificationTester extends BaseObject {
       controller: this
     })) as Dialog;
 
-    // dialog.getControlsByFieldGroupId("actionInput").forEach(c => {
-    //   Core.getMessageManager().registerObject(c, true);
-    // });
-
     dialog.attachAfterClose(() => {
-      this._ctrllerExt.getView().removeDependent(dialog);
+      this.ctrllerExt.getView().removeDependent(dialog);
       dialog.destroy();
     });
 
-    dialog.setModel(this._dialogModel);
+    dialog.setModel(this.dialogModel);
     return dialog;
   }
 
-  private async _getLanguages(): Promise<object[]> {
+  private registerHandlers() {
+    this.validator.registerFields(
+      this.notificationTestDialog.getControlsByFieldGroupId("actionInput")
+    );
+
+    // tables need to be handled separately as item controls are created
+    // on the fly
+    const possibleTables =
+      this.notificationTestDialog.getControlsByFieldGroupId("editableTable");
+
+    for (const table of possibleTables) {
+      if (!(table instanceof Table)) {
+        continue;
+      }
+      table.attachUpdateFinished(() => {
+        const items = (table.getItems() as ColumnListItem[]) || [];
+        for (const item of items) {
+          if (!item.data("__handlerRegistered")) {
+            this.validator.registerFields(
+              item
+                .getCells()
+                .filter(c => c.getFieldGroupIds().includes("actionInput"))
+            );
+            item.data("__handlerRegistered", true);
+          }
+        }
+      });
+    }
+  }
+
+  private async getLanguages(): Promise<object[]> {
     if (!NotificationTester.languageList) {
       NotificationTester.languageList = (
-        this._ctrllerExt.getModel() as ODataModel
+        this.ctrllerExt.getModel() as ODataModel
       ).bindList("/Languages");
     }
     const languageContexts =
@@ -182,7 +193,7 @@ export default class NotificationTester extends BaseObject {
     return languageContexts.map(c => c.getObject() as object);
   }
 
-  private _getTableItemsPath(event: Event) {
+  private getTableItemsPath(event: Event) {
     let control = event?.getSource() as Control;
 
     while (control && !control.isA("sap.m.Table")) {
@@ -200,7 +211,7 @@ export default class NotificationTester extends BaseObject {
     return itemsPath;
   }
 
-  private _removeComputedProperties(arrays: Record<string, unknown>[][]) {
+  private removeComputedProperties(arrays: Record<string, unknown>[][]) {
     arrays.forEach(array => {
       array.forEach(entry => {
         Object.keys(entry)
@@ -210,7 +221,7 @@ export default class NotificationTester extends BaseObject {
     });
   }
 
-  private _getNotificationData() {
+  private getNotificationData() {
     const data = {
       Priority: "Medium",
       Properties: [{}] as Selectable[],
