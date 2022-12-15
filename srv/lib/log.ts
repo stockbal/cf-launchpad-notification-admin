@@ -1,7 +1,7 @@
 import cds from "@sap/cds";
 import { setLogLevel } from "@sap-cloud-sdk/util";
 
-export function getLogger(id: "notification-api" | "account-api" | "ias") {
+export function getLogger(id: "notification-api") {
   return cds.log(id);
 }
 
