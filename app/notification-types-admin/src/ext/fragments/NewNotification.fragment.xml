@@ -213,7 +213,7 @@
                 <items>
                     <ColumnListItem selected="{$selected}">
                         <cells>
-                            <Input value="{Recipient}"
+                            <Input value="{RecipientId}"
                                 required="true"
                                 fieldGroupIds="actionInput"/>
                         </cells>
