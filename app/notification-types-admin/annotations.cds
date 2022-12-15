@@ -14,16 +14,18 @@ UI : {
         {Value : NotificationTypeKey},
         {Value : NotificationTypeVersion},
         {Value : IsGroupable},
-        {
-            $Type  : 'UI.DataFieldForAction',
-            Action : 'NotificationTypeService.EntityContainer/syncFromRemote',
-            Label  : '{i18n>NotificationType_actions_syncFromRemote}',
-        },
-        {
-            $Type  : 'UI.DataFieldForAction',
-            Action : 'NotificationTypeService.EntityContainer/syncWithLocal',
-            Label  : '{i18n>NotificationType_actions_syncWithLocal}',
-        }
+        // ACTIONS NOT YET IMPLEMENTED
+        // ----------------------------------
+        // {
+        //     $Type  : 'UI.DataFieldForAction',
+        //     Action : 'NotificationTypeService.EntityContainer/syncFromRemote',
+        //     Label  : '{i18n>NotificationType_actions_syncFromRemote}',
+        // },
+        // {
+        //     $Type  : 'UI.DataFieldForAction',
+        //     Action : 'NotificationTypeService.EntityContainer/syncWithLocal',
+        //     Label  : '{i18n>NotificationType_actions_syncWithLocal}',
+        // }
     ],
     FieldGroup #General : {Data : [
         {Value : NotificationTypeVersion},
