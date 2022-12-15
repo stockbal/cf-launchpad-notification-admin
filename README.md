@@ -2,6 +2,10 @@
 
 Simple Fiori Elements application on top of CAP application to manage the notification types for the SAP Launchpad service.
 
+## Local Setup for `husky`
+
+Run `npx husky install` to install git hooks
+
 ## Configure `.env` file for API testing
 
 Template for `.env` file
