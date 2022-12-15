@@ -14,18 +14,18 @@ UI : {
         {Value : NotificationTypeKey},
         {Value : NotificationTypeVersion},
         {Value : IsGroupable},
-        // ACTIONS NOT YET IMPLEMENTED
-        // ----------------------------------
-        // {
-        //     $Type  : 'UI.DataFieldForAction',
-        //     Action : 'NotificationTypeService.EntityContainer/syncFromRemote',
-        //     Label  : '{i18n>NotificationType_actions_syncFromRemote}',
-        // },
-        // {
-        //     $Type  : 'UI.DataFieldForAction',
-        //     Action : 'NotificationTypeService.EntityContainer/syncWithLocal',
-        //     Label  : '{i18n>NotificationType_actions_syncWithLocal}',
-        // }
+    // ACTIONS NOT YET IMPLEMENTED
+    // ----------------------------------
+    // {
+    //     $Type  : 'UI.DataFieldForAction',
+    //     Action : 'NotificationTypeService.EntityContainer/syncFromRemote',
+    //     Label  : '{i18n>NotificationType_actions_syncFromRemote}',
+    // },
+    // {
+    //     $Type  : 'UI.DataFieldForAction',
+    //     Action : 'NotificationTypeService.EntityContainer/syncWithLocal',
+    //     Label  : '{i18n>NotificationType_actions_syncWithLocal}',
+    // }
     ],
     FieldGroup #General : {Data : [
         {Value : NotificationTypeVersion},
@@ -63,8 +63,9 @@ UI : {
         },
     ]
 }) {
-    syncedNotificationTypeID @UI.HiddenFilter;
-    headerTitle              @UI.HiddenFilter;
+    syncedNotificationTypeID @UI.Hidden;
+    headerTitle              @UI.Hidden;
+    ID                       @UI.Hidden;
 
     TemplateLanguage         @(
         Common.ValueListWithFixedValues,
@@ -92,11 +93,9 @@ UI : {
     ]},
     LineItem             : [
         {Value : Language_code},
-        {Value : TemplatePublic},
         {Value : TemplateSensitive},
         {Value : TemplateGrouped},
-        {Value : Subtitle},
-        {Value : Description}
+        {Value : Subtitle}
     ],
     Facets               : [
         {
@@ -117,11 +116,11 @@ UI : {
         Common.TextArrangement : #TextOnly
     );
 
-    TemplatePublic    @UI.MultiLineText;
+    TemplatePublic    @UI.MultiLineText  @UI.Hidden;
     TemplateSensitive @UI.MultiLineText;
     TemplateGrouped   @UI.MultiLineText;
     Subtitle          @UI.MultiLineText;
-    Description       @UI.MultiLineText;
+    Description       @UI.MultiLineText  @UI.Hidden;
 };
 
 annotate service.Actions with @( //
