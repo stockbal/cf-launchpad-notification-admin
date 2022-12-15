@@ -224,7 +224,7 @@ export default class NotificationTester extends BaseObject {
   private getNotificationData() {
     const data = {
       Priority: "Medium",
-      Properties: [{}] as Selectable[],
+      Properties: [] as Selectable[],
       TargetParameters: [] as Selectable[],
       Recipients: [] as Selectable[]
     };
