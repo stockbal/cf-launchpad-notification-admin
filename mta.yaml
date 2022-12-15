@@ -120,7 +120,19 @@ resources:
       config:
         tenant-mode: dedicated
         xsappname: notification-admin-${org}-${space}
-      path: ./xs-security.json
+        scopes:
+          - name: $XSAPPNAME.admin
+            description: Admin
+        role-templates:
+          - name: NotificationTypesAdmin
+            description: Manage notification types
+            scope-references:
+              - $XSAPPNAME.admin
+        role-collections:
+          - name: NotificationTypesAdmin
+            description: Admin for Notification Types
+            role-template-references:
+              - $XSAPPNAME.NotificationTypesAdmin
       service: xsuaa
       service-plan: application
 
