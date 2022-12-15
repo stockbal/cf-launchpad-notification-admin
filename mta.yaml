@@ -41,6 +41,9 @@ modules:
       - name: notification-admin-db
     parameters:
       buildpack: nodejs_buildpack
+    build-parameters:
+      ignore:
+        - node_modules/
 
   - name: notification-admin-app-content
     type: com.sap.application.content
