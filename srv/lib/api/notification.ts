@@ -16,7 +16,7 @@ export class ExtNotificationService {
    * @param notification notification payload
    * @returns result of POST
    */
-  static async createNotification(notification: srv.Notifications): Promise<srv.Notifications> {
+  static async createNotification(notification: srv.Notification): Promise<string> {
     const notifServiceDest = await getCachedDestination(Destinations.SAP_NOTIFICATION);
 
     try {
@@ -26,28 +26,30 @@ export class ExtNotificationService {
         data: notification
       });
       ExtNotificationService.logNotificationSuccess(notification);
-      return response.data.d as srv.Notifications;
+      return response.data.d.Id as string;
     } catch (error) {
       ExtNotificationService.logNotificationError(notification);
       throw createError(error);
     }
   }
 
-  private static logNotificationSuccess(notification: srv.Notifications) {
+  private static logNotificationSuccess(notification: srv.Notification) {
     logger.info(
       `Created notification '${notification.NotificationTypeKey}-${
         notification.NotificationTypeVersion
-      }' for users ${JSON.stringify(notification.Recipients.map(r => r.RecipientId))}`
+      }' for users ${JSON.stringify(
+        (notification.Recipients as { RecipientId: string }[]).map(r => r.RecipientId)
+      )}`
     );
   }
 
-  private static logNotificationError(notification: srv.Notifications) {
-    logger.error(
-      `Notification '${notification.NotificationTypeKey}-${
-        notification.NotificationTypeVersion
-      }' for users ${JSON.stringify(
-        notification.Recipients.map(r => r.RecipientId)
-      )} could not be created`
-    );
+  private static logNotificationError(notification: srv.Notification) {
+    let errorText = `Notification '${notification.NotificationTypeKey}-${notification.NotificationTypeVersion}'`;
+    if (notification.Recipients?.length > 0) {
+      errorText = `${errorText} for users ${JSON.stringify(
+        (notification.Recipients as { RecipientId: string }[]).map(r => r.RecipientId)
+      )} could not be created`;
+    }
+    logger.error(errorText);
   }
 }
