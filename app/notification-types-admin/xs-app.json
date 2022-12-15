@@ -10,6 +10,13 @@
       "csrfProtection": false
     },
     {
+      "source": "^/notifications/(.*)$",
+      "target": "/notifications/$1",
+      "destination": "srv-api",
+      "authenticationType": "xsuaa",
+      "csrfProtection": false
+    },
+    {
       "source": "^/resources/(.*)$",
       "target": "/resources/$1",
       "authenticationType": "none",
