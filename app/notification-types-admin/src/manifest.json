@@ -160,6 +160,17 @@
             "settings": {
               "entitySet": "NotificationTypes",
               "variantManagement": "Page",
+              "content": {
+                "header": {
+                  "actions": {
+                    "syncWithRemote": {
+                      "press": ".extension.com.devepos.apps.cflp.notificationtypesadmin.ext.controller.extendLP.onSyncFromRemote",
+                      "text": "{i18n>NotificationType_Actions_syncFromRemote_text}",
+                      "visible": true
+                    }
+                  }
+                }
+              },
               "navigation": {
                 "NotificationTypes": {
                   "detail": {

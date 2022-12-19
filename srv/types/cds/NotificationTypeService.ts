@@ -97,11 +97,12 @@ export interface Templates {
 }
 
 export enum ActionSyncFromRemote {
-  name = "syncFromRemote"
+  name = "syncFromRemote",
+  paramOverwriteLocal = "overwriteLocal"
 }
 
-export enum ActionSyncWithLocal {
-  name = "syncWithLocal"
+export interface ActionSyncFromRemoteParams {
+  overwriteLocal: boolean;
 }
 
 export enum Entity {

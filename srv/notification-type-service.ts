@@ -1,7 +1,7 @@
 import { ApplicationService } from "@sap/cds";
 import { AxiosError } from "axios";
 import { ExtNotificationTypeService } from "./lib/api/notification-type";
-import { NotificationTypeServiceTypes as srv, ExternalNotificationType } from "./types";
+import { NotificationTypeServiceTypes as srv, ExternalNotificationType, DbTypes } from "./types";
 
 export class NotificationTypeService extends ApplicationService {
   override async init() {
@@ -70,6 +70,72 @@ export class NotificationTypeService extends ApplicationService {
         }
       }
     });
+
+    this.on("syncFromRemote", async req => {
+      const params = req.data as srv.ActionSyncFromRemoteParams;
+
+      const extNotificationTypes = await ExtNotificationTypeService.getNotificationTypes();
+
+      const localNotificationTypes = (await SELECT.from(
+        DbTypes.Entity.NotificationTypes
+      )) as srv.NotificationTypes[];
+
+      const extTypesToCreate = [] as srv.NotificationTypes[];
+      let extTypesSkipCount = 0;
+      let extTypesSyncCount = 0;
+      const localNotifTypesToDelete: string[] = [];
+
+      for (const extType of extNotificationTypes) {
+        let isCreateFromExt = true;
+        for (const lt of localNotificationTypes) {
+          if (
+            lt.NotificationTypeKey === extType.NotificationTypeKey &&
+            lt.NotificationTypeVersion === extType.NotificationTypeVersion
+          ) {
+            if (lt.syncedNotificationTypeID !== extType.NotificationTypeId) {
+              if (params.overwriteLocal) {
+                localNotifTypesToDelete.push(lt.ID);
+              } else {
+                extTypesSkipCount++;
+                isCreateFromExt = false;
+              }
+              break;
+            } else {
+              isCreateFromExt = false; // already exists and is synced
+              break;
+            }
+          }
+        }
+        if (isCreateFromExt) {
+          extTypesToCreate.push({
+            NotificationTypeKey: extType.NotificationTypeKey,
+            NotificationTypeVersion: extType.NotificationTypeVersion,
+            IsGroupable: extType.IsGroupable,
+            syncedNotificationTypeID: extType.NotificationTypeId
+          } as srv.NotificationTypes);
+          extTypesSyncCount++;
+        }
+      }
+
+      if (localNotifTypesToDelete.length > 0) {
+        await DELETE.from(DbTypes.Entity.NotificationTypes).where({
+          ID: { in: localNotifTypesToDelete }
+        });
+      }
+      if (extTypesSyncCount) {
+        await INSERT.into(DbTypes.Entity.NotificationTypes).entries(extTypesToCreate);
+      }
+
+      if (extNotificationTypes.length > 0) {
+        req.notify(200, "NT_SYNC_ACTION", undefined, [
+          extTypesSyncCount,
+          extNotificationTypes.length
+        ]);
+      } else {
+        req.notify(304, "NT_SYNC_ACTION_NO_EXT_TYPES");
+      }
+    });
+
     await super.init();
   }
 }
