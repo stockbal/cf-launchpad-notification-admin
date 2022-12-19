@@ -111,7 +111,8 @@ export class NotificationTypeService extends ApplicationService {
             NotificationTypeKey: extType.NotificationTypeKey,
             NotificationTypeVersion: extType.NotificationTypeVersion,
             IsGroupable: extType.IsGroupable,
-            syncedNotificationTypeID: extType.NotificationTypeId
+            syncedNotificationTypeID: extType.NotificationTypeId,
+            createdBy: "Launchpad"
           } as srv.NotificationTypes);
           extTypesSyncCount++;
         }
