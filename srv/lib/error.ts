@@ -24,7 +24,9 @@ export function createError(e: unknown): Error {
    * message with a generic text and the calling clients will not see the custom message
    */
   if (isAxiosError(e)) {
-    exception = Object.assign(new Error(getAxiosErrorMessage(e)), { code: e.status || 500 });
+    exception = Object.assign(new Error(getAxiosErrorMessage(e)), {
+      code: e.response?.status || 500
+    });
   } else if (typeof e === "string") {
     exception = Object.assign(new Error(e), { code: 500 });
   } else if (e instanceof Error) {
