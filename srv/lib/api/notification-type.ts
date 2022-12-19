@@ -4,11 +4,11 @@ import { ExternalNotificationType } from "../../types";
 import { createError } from "../error";
 import { Destinations } from "../constants";
 import { getCachedDestination } from "../destination";
-import { getLogger } from "../log";
+import { getLogger, LoggerId } from "../log";
 
 const NOTIFICATION_TYPES_ENDPOINT = "v2/NotificationType.svc";
 
-const logger = getLogger("notification-api");
+const logger = getLogger(LoggerId.ExtNotificationAPI);
 
 export class ExtNotificationTypeService {
   static async getNotificationTypes(): Promise<ExternalNotificationType[]> {

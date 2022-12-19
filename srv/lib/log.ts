@@ -1,7 +1,12 @@
 import cds from "@sap/cds";
 import { setLogLevel } from "@sap-cloud-sdk/util";
 
-export function getLogger(id: "notification-api") {
+export enum LoggerId {
+  ExtNotificationAPI = "ext-notification-api",
+  NotificationService = "notification-service"
+}
+
+export function getLogger(id: LoggerId) {
   return cds.log(id);
 }
 
