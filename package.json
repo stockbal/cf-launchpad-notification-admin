@@ -2,7 +2,7 @@
   "name": "notification-admin",
   "version": "1.0.0",
   "description": "CAP/Fiori application for managing SAP Launchpad service notification types",
-  "repository": "http://github.com/stockbal/notification-admin",
+  "repository": "http://github.com/stockbal/cf-launchpad-notification-admin",
   "license": "MIT",
   "private": true,
   "dependencies": {
