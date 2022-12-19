@@ -13,6 +13,7 @@ import Context from "sap/ui/model/odata/v4/Context";
 import ODataContextBinding from "sap/ui/model/odata/v4/ODataContextBinding";
 import ODataListBinding from "sap/ui/model/odata/v4/ODataListBinding";
 import ODataModel from "sap/ui/model/odata/v4/ODataModel";
+import deepClone from "sap/base/util/deepClone";
 
 import FieldValidator from "./FieldValidator";
 import { prepareArraysForTableBinding, Selectable, TemplateableArray } from "./modelEnhancements";
@@ -91,7 +92,9 @@ export default class NotificationTester extends BaseObject {
     this.notificationTestDialog.setBusy(true);
     const notificationModel = this.ctrllerExt.getModel("notification") as ODataModel;
     const actionBinding = notificationModel.bindContext("/createNotification(...)");
-    const notificationParam = this.dialogModel.getProperty("/notification") as Notification;
+    const notificationParam = deepClone(
+      this.dialogModel.getProperty("/notification")
+    ) as Notification;
 
     // payload needs to be cleaned up before it can be used
     this.removeComputedProperties([
@@ -248,8 +251,8 @@ export default class NotificationTester extends BaseObject {
   }
 
   private removeComputedProperties(arrays: Record<string, unknown>[][]) {
-    arrays.forEach(array => {
-      array.forEach(entry => {
+    arrays.forEach?.(array => {
+      array.forEach?.(entry => {
         Object.keys(entry)
           .filter(p => p.startsWith("$"))
           .forEach(propName => delete entry[propName]);
