@@ -35,15 +35,17 @@ type NotificationType = {
   }[];
 };
 
+type Notification = {
+  Priority: string;
+  NotificationTypeKey: string;
+  NotificationTypeVersion: string;
+  Properties?: TemplateableArray<Selectable>;
+  TargetParameters?: TemplateableArray<Selectable>;
+  Recipients: TemplateableArray<Selectable>;
+};
+
 type DialogModelData = {
-  notification: {
-    Priority: string;
-    NotificationTypeKey: string;
-    NotificationTypeVersion: string;
-    Properties: TemplateableArray<Selectable>;
-    TargetParameters: TemplateableArray<Selectable>;
-    Recipients: TemplateableArray<Selectable>;
-  };
+  notification: Notification;
   Languages: object[];
 };
 
@@ -89,15 +91,16 @@ export default class NotificationTester extends BaseObject {
     this.notificationTestDialog.setBusy(true);
     const notificationModel = this.ctrllerExt.getModel("notification") as ODataModel;
     const actionBinding = notificationModel.bindContext("/createNotification(...)");
-    const actionParam = this.dialogModel.getProperty("/notification");
+    const notificationParam = this.dialogModel.getProperty("/notification") as Notification;
 
     // payload needs to be cleaned up before it can be used
     this.removeComputedProperties([
-      actionParam.Properties,
-      actionParam.TargetParameters,
-      actionParam.Recipients
+      notificationParam.Properties,
+      notificationParam.TargetParameters,
+      notificationParam.Recipients
     ]);
-    actionBinding.setParameter("notification", actionParam);
+    this.removeEmptyArrays(notificationParam);
+    actionBinding.setParameter("notification", notificationParam);
 
     try {
       await actionBinding.execute();
@@ -325,5 +328,14 @@ export default class NotificationTester extends BaseObject {
         ...extractPlaceHolders(template.Subtitle)
       ])
     ];
+  }
+
+  private removeEmptyArrays(notification: Notification) {
+    if (!notification.Properties.length) {
+      delete notification.Properties;
+    }
+    if (!notification.TargetParameters.length) {
+      delete notification.TargetParameters;
+    }
   }
 }
