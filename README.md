@@ -5,7 +5,8 @@ Project to allow an easier maintenance of notification types for the SAP Launchp
 This project adds the following capabilities to the Notification service.
 
 - UI for easy maintenance -> enable business users
-- Easy synchronization of multiple entries to and from the notification service (not yet implemented)
+- Easy synchronization of existing entries from the notification service
+  > **Note**: Only the main properties of the notification types can be synced to the local HANA storage as information on *Templates* and *Actions* can not be retrieved via the SAP Launchpad Notification service.
 
 ## Features
 
