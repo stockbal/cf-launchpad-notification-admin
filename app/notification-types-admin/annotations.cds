@@ -16,8 +16,8 @@ UI: {
         {Value: IsGroupable}
     ],
     FieldGroup #General: {Data: [
-        {Value: NotificationTypeVersion},
         {Value: NotificationTypeKey},
+        {Value: NotificationTypeVersion},
         {Value: IsGroupable},
         {Value: TemplateLanguage_code}
     ]},
